@@ -5,22 +5,8 @@ class DataContainer<T> {
   String errorMsg;
   T data;
 
-  /**
-   *
-   */
-  factory DataContainer(jsonStr, Function buildFun) => jsonStr is String
-      ? DataContainer.fromJson(json.decode(jsonStr), buildFun)
-      : DataContainer.fromJson(jsonStr, buildFun);
+  DataContainer(this.errorCode, this.errorMsg, this.data);
 
-  /**
-   *
-   */
-  DataContainer.fromJson(jsonRes, Function buildFun) {
-    errorCode = jsonRes['errorCode'];
-    errorMsg = jsonRes['errorMsg'];
-    //
-    data = buildFun(jsonRes['data']);
-  }
 }
 
 /**
@@ -45,7 +31,8 @@ class ArticleList {
     this.total,
   });
 
-  factory ArticleList.fromJson(json) => new ArticleList(
+  factory ArticleList.fromJson(json) =>
+      new ArticleList(
         curPage: json["curPage"],
         datas: new List<Article>.from(
             json["datas"].map((x) => Article.fromJson(x))),
@@ -60,8 +47,6 @@ class ArticleList {
   String toString() {
     return 'ArticleList{curPage: $curPage, datas: $datas, offset: $offset, over: $over, pageCount: $pageCount, size: $size, total: $total}';
   }
-
-
 }
 
 /**
@@ -120,7 +105,8 @@ class Article {
     this.zan,
   });
 
-  factory Article.fromJson(json) => new Article(
+  factory Article.fromJson(json) =>
+      new Article(
         apkLink: json["apkLink"],
         author: json["author"],
         chapterId: json["chapterId"],
@@ -153,8 +139,6 @@ class Article {
   String toString() {
     return 'Article{apkLink: $apkLink, author: $author, chapterId: $chapterId, chapterName: $chapterName, collect: $collect, courseId: $courseId, desc: $desc, envelopePic: $envelopePic, fresh: $fresh, id: $id, link: $link, niceDate: $niceDate, origin: $origin, prefix: $prefix, projectLink: $projectLink, publishTime: $publishTime, superChapterId: $superChapterId, superChapterName: $superChapterName, tags: $tags, title: $title, type: $type, userId: $userId, visible: $visible, zan: $zan}';
   }
-
-
 }
 
 class Tag {
@@ -166,12 +150,14 @@ class Tag {
     this.url,
   });
 
-  factory Tag.fromJson(json) => new Tag(
+  factory Tag.fromJson(json) =>
+      new Tag(
         name: json["name"],
         url: json["url"],
       );
 
-  Map<String, dynamic> toJson() => {
+  Map<String, dynamic> toJson() =>
+      {
         "name": name,
         "url": url,
       };

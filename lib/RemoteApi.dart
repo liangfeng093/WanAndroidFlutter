@@ -1,6 +1,8 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:dio/dio.dart';
+import 'package:wanandroidflutter/network/DataContainer.dart';
 
 class RemoteApi {
   final BASE_URL = "https://www.wanandroid.com";
@@ -12,6 +14,18 @@ class RemoteApi {
   static final String POST = "post";
   static final String DATA = "data";
   static final String CODE = "errorCode";
+
+  ///网络请求状态码:200、404等等
+  String _statusKey = "";
+
+  ///网络请求结果码:表示请求成功或失败
+  String _cedoKey = "errorCode";
+
+  ///网络请求结果说明:成功或失败的原因
+  String _msgKey = "errorMsg";
+
+  ///网络请求数据集
+  String _dataKey = "data";
 
   /**
    * 单例模式
@@ -54,10 +68,62 @@ class RemoteApi {
     }));
   }
 
+  ///配置http请求
+  ///requestType
+  ///Future 表示一个延时对象
+  Future<DataContainer<T>> request<T>(String requestType, String path,
+      {Options options}) async {
+    ///校验options
+    if (options == null) {
+      options = Options();
+    }
+    options.
+    options.method = requestType; //设置请求类型
+
+    Response response = await _dio.request(path, options: options);
+    String _status; //
+    int _code;
+    String _msg;
+    T _data;
+    if (response.statusCode == HttpStatus.ok) {
+      try {
+        if (response.data is Map) {
+          //data作为map处理
+          //解析json最外层字段
+          if (response.data["errorCode"] is int) {
+            _code = response.data["errorCode"];
+          } else {
+            _code = int.parse(response.data["errorCode"]);
+          }
+          _msg = response.data["errorMsg"];
+          _data = response.data["data"];
+        } else {
+          //data作为字符串处理
+          Map<String, dynamic> _dataMap = json.decode(response.data.toString());
+          if (_dataMap["errorCode"] is int) {
+            _code = _dataMap["errorCode"];
+          } else {
+            _code = int.parse(_dataMap["errorCode"]);
+          }
+          _msg = _dataMap["errorMsg"];
+          _data = _dataMap["data"];
+        }
+        return DataContainer<T>(_code, _msg, _data);
+      } catch (e) {
+        return new Future.error(new DioError(
+          response: response,
+          message: "data parsing exception...",
+          type: DioErrorType.RESPONSE,
+        ));
+      }
+    } else {}
+  }
+
   /**
    * get请求
    */
-  get(String url, Options options) async {
+  Future get(String url, Options options) async {
+    //async会让整个方法中的逻辑都异步
     Response response;
     try {
       response = await _dio.get(url);
@@ -71,6 +137,14 @@ class RemoteApi {
     }
     return response;
   }
+
+  /**
+   * f
+   */
+  Future getArticleList(String url, Options options) async {}
 }
 
-
+class RequestType {
+  static final String GET = "GET";
+  static final String POST = "POST";
+}

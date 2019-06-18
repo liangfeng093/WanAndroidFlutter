@@ -1,17 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:dio/dio.dart';
-import 'package:wanandroidflutter/DataContainer.dart';
+import 'package:wanandroidflutter/network/DataContainer.dart';
 import 'package:wanandroidflutter/RemoteApi.dart';
+import 'package:wanandroidflutter/utils/LogUtils.dart';
 
 void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
+  final String TAG = "MyApp";
+
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    getHttp();
+    print("1");
+//    getHttp();|
+    RemoteApi.getInstance().request(RemoteApi.GET, "/article/list/0/json");
+    print("3");
 
-    var data = RemoteApi.getInstance().get("/article/list/0/json",Options(responseType: ResponseType.plain));
+//    var data = RemoteApi.getInstance().get("/article/list/0/json",Options(responseType: ResponseType.plain));
 
     return MaterialApp(
         title: 'Flutter Demo',
@@ -28,25 +34,25 @@ class MyApp extends StatelessWidget {
           ),
         ));
   }
-}
 
-void getHttp() async {
-  try {
-    Response response = await Dio().get(
-        "https://www.wanandroid.com/article/list/0/json",
-        options: Options(responseType: ResponseType.plain));
+  void getHttp() async {
+    try {
+      Response<Map<String, dynamic>> response =
+          await Dio().get("https://www.wanandroid.com/article/list/0/json");
 
-    ArticleList articleList = DataContainer<ArticleList>(
-        response.data, (res) => ArticleList.fromJson(res)).data;
-
-    print("articleList:" + articleList.toString());
-//    print("errorMsg:" + response.data.containsKey("errorMsg").toString());
-//    print("curPage:" + response.data.containsKey("curPage").toString());
-//    print("keys:" + response.data.keys.toString());
-//    print("keys:" + response.data.keys.);
-//    print(response.data is DataContainer);
-    print(response);
-  } catch (e) {
-    print(e);
+      LogUtils.responseIsMap(response);
+      LogUtils.responseIsList(response);
+      LogUtils.i(TAG, response);
+      print(response.data.keys.toString());
+      print(response.data.values.toString());
+      print(response.data.containsKey("errorMsg"));
+      Map map = response.data["data"];
+      print(map["curPage"]);
+      print(map["datas"]);
+      print(response.data["errorCode"]);
+      print(response.data["errorMsg"].toString().isEmpty);
+    } catch (e) {
+      print(e);
+    }
   }
 }
