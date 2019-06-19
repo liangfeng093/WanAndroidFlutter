@@ -5,7 +5,7 @@ import 'package:dio/dio.dart';
 import 'package:wanandroidflutter/network/DataContainer.dart';
 
 class RemoteApi {
-  final BASE_URL = "https://www.wanandroid.com";
+  final BASE_URL = "https://www.wanandroid.com/";
 
   Dio _dio;
 
@@ -77,7 +77,6 @@ class RemoteApi {
     if (options == null) {
       options = Options();
     }
-    options.
     options.method = requestType; //设置请求类型
 
     Response response = await _dio.request(path, options: options);
@@ -118,33 +117,17 @@ class RemoteApi {
       }
     } else {}
   }
-
-  /**
-   * get请求
-   */
-  Future get(String url, Options options) async {
-    //async会让整个方法中的逻辑都异步
-    Response response;
-    try {
-      response = await _dio.get(url);
-      print("======>response:" + response.toString());
-    } on DioError catch (e) {
-      if (CancelToken.isCancel(e)) {
-        print('get请求取消! ' + e.message);
-      } else {
-        print('get请求发生错误：$e');
-      }
-    }
-    return response;
-  }
-
-  /**
-   * f
-   */
-  Future getArticleList(String url, Options options) async {}
 }
 
 class RequestType {
   static final String GET = "GET";
   static final String POST = "POST";
+}
+
+class ResultCode {
+  /**
+   * errorCode = 0 代表执行成功，不建议依赖任何非0的 errorCode.
+   * errorCode = -1001 代表登录失效，需要重新登录。
+   */
+  static final int SUCCESS = 0;
 }

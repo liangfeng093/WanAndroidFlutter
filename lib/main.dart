@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:dio/dio.dart';
 import 'package:wanandroidflutter/network/DataContainer.dart';
 import 'package:wanandroidflutter/RemoteApi.dart';
+import 'package:wanandroidflutter/network/DataRepository.dart';
 import 'package:wanandroidflutter/utils/LogUtils.dart';
 
 void main() => runApp(MyApp());
@@ -12,12 +13,13 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    print("1");
-//    getHttp();|
-    RemoteApi.getInstance().request(RemoteApi.GET, "/article/list/0/json");
-    print("3");
-
-//    var data = RemoteApi.getInstance().get("/article/list/0/json",Options(responseType: ResponseType.plain));
+    DataRepository repository = DataRepository();
+    //then方法:注册一个Future回调
+    //当getBanner返回Future时出发then回调
+    repository.getBanner().then((list){
+      //
+      list;
+    });
 
     return MaterialApp(
         title: 'Flutter Demo',

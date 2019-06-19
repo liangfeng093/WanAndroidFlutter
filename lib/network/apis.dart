@@ -29,7 +29,7 @@ class WanAndroidApi {
   static const String USER_LOGIN = "user/login"; //登录
   static const String USER_LOGOUT = "user/logout"; //退出
 
-  static String getPath({String path: '', int page, String resType: 'json'}) {
+  static String splicePath({String path: '', int page, String resType: 'json'}) {
     StringBuffer sb = new StringBuffer(path);
     if (page != null) {
       sb.write('/$page');
