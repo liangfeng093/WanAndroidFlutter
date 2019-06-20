@@ -1,4 +1,7 @@
-import 'package:flutter/widgets.dart';
+import 'dart:collection';
+
+import 'package:flutter/material.dart';
+import 'package:wanandroidflutter/bean/BannerBean.dart';
 import 'package:wanandroidflutter/network/DataRepository.dart';
 
 /**
@@ -16,16 +19,17 @@ class BannerWidget extends StatefulWidget {
 }
 
 class BannerState extends State<BannerWidget> {
+  List<BannerBean> banners = List();
+
   void _loadBannerData() {
     DataRepository repository = DataRepository();
     //then方法:注册一个Future回调
     //当getBanner返回Future时出发then回调
-    repository.getBanner().then((baners) {
-      baners;
+    repository.getBanner().then((bannerList) {
+      banners.clear();
+      banners.addAll(bannerList);
       //修改widget状态(填充数据)
-      setState(() {
-
-      });
+      setState(() {});
     });
   }
 
@@ -39,8 +43,11 @@ class BannerState extends State<BannerWidget> {
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
-    return PageView.custom(scrollDirection: Axis.horizontal,childrenDelegate: ,);
-   /* return PageView(
+    return PageView(
+      scrollDirection: Axis.horizontal,
+      children: _bannerItem(),
+    );
+    /* return PageView(
       children: <Widget>[
         Image.network(
             "https://www.wanandroid.com/blogimgs/50c115c2-cf6c-4802-aa7b-a4334de444cd.png"),
@@ -51,9 +58,17 @@ class BannerState extends State<BannerWidget> {
       ],
     );*/
   }
+
+  _bannerItem() {
+    List<Widget> items = [];
+    banners.forEach((banner) {
+      items.add(Image.network(banner.imagePath,fit: BoxFit.fill,));
+    });
+    return items;
+  }
 }
 
-class BannerItemWidget extends StatefulWidget{
+class BannerItemWidget extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
     // TODO: implement createState

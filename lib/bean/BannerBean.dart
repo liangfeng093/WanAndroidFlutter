@@ -7,11 +7,11 @@
 
 import 'dart:convert';
 
-Banner bannerFromJson(String str) => Banner.fromJson(json.decode(str));
+BannerBean bannerFromJson(String str) => BannerBean.fromJson(json.decode(str));
 
-String bannerToJson(Banner data) => json.encode(data.toJson());
+String bannerToJson(BannerBean data) => json.encode(data.toJson());
 
-class Banner {
+class BannerBean {
   String desc;
   int id;
   String imagePath;
@@ -21,7 +21,7 @@ class Banner {
   int type;
   String url;
 
-  Banner({
+  BannerBean({
     this.desc,
     this.id,
     this.imagePath,
@@ -33,7 +33,7 @@ class Banner {
   });
 
   ///解析map，初始化成员变量
-  factory Banner.fromJson(Map<String, dynamic> json) => new Banner(
+  factory BannerBean.fromJson(Map<String, dynamic> json) => new BannerBean(
     desc: json["desc"],
     id: json["id"],
     imagePath: json["imagePath"],
