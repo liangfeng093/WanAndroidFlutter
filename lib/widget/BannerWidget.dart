@@ -47,22 +47,12 @@ class BannerState extends State<BannerWidget> {
       scrollDirection: Axis.horizontal,
       children: _bannerItem(),
     );
-    /* return PageView(
-      children: <Widget>[
-        Image.network(
-            "https://www.wanandroid.com/blogimgs/50c115c2-cf6c-4802-aa7b-a4334de444cd.png"),
-        Image.network(
-            "https://www.wanandroid.com/blogimgs/ab17e8f9-6b79-450b-8079-0f2287eb6f0f.png"),
-        Image.network(
-            "https://www.wanandroid.com/blogimgs/fb0ea461-e00a-482b-814f-4faca5761427.png"),
-      ],
-    );*/
   }
 
   _bannerItem() {
     List<Widget> items = [];
     banners.forEach((banner) {
-      items.add(Image.network(banner.imagePath,fit: BoxFit.fill,));
+      items.add(Image.network(banner.imagePath,fit: BoxFit.fitWidth,));
     });
     return items;
   }
