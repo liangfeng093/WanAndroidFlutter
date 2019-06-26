@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:dio/dio.dart';
 import 'package:wanandroidflutter/network/DataContainer.dart';
+import 'package:wanandroidflutter/utils/LogUtils.dart';
 
 class RemoteApi {
   final BASE_URL = "https://www.wanandroid.com/";
@@ -88,6 +89,7 @@ class RemoteApi {
       try {
         if (response.data is Map) {
           //data作为map处理
+          LogUtils.e("RemoteApi==>", "data作为map处理");
           //解析json最外层字段
           if (response.data["errorCode"] is int) {
             _code = response.data["errorCode"];
@@ -98,6 +100,8 @@ class RemoteApi {
           _data = response.data["data"];
         } else {
           //data作为字符串处理
+          LogUtils.e("RemoteApi==>", "data作为字符串处理");
+
           Map<String, dynamic> _dataMap = json.decode(response.data.toString());
           if (_dataMap["errorCode"] is int) {
             _code = _dataMap["errorCode"];
@@ -111,7 +115,7 @@ class RemoteApi {
       } catch (e) {
         return new Future.error(new DioError(
           response: response,
-          message: "data parsing exception...",
+          message: "data parsing exception ======>" + e.toString(),
           type: DioErrorType.RESPONSE,
         ));
       }
