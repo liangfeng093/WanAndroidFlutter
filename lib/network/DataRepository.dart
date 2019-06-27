@@ -51,7 +51,7 @@ class DataRepository {
         await RemoteApi.getInstance().request<Map<String, dynamic>>(
             RemoteApi.GET,
             WanAndroidApi.splicePath(
-                path: WanAndroidApi.ARTICLE_LIST, page: 0));
+                path: WanAndroidApi.ARTICLE_LIST, page: page));
 
     List<Article> articles;
 

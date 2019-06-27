@@ -3,6 +3,7 @@ import 'dart:collection';
 import 'package:flutter/material.dart';
 import 'package:wanandroidflutter/bean/BannerBean.dart';
 import 'package:wanandroidflutter/network/DataRepository.dart';
+import 'package:wanandroidflutter/utils/LogUtils.dart';
 
 /**
  * @Author: mzf
@@ -19,6 +20,8 @@ class BannerWidget extends StatefulWidget {
 }
 
 class BannerState extends State<BannerWidget> {
+  final String TAG = "BannerState";
+
   List<BannerBean> banners = List();
 
   void _loadBannerData() {
@@ -52,7 +55,16 @@ class BannerState extends State<BannerWidget> {
   _bannerItem() {
     List<Widget> items = [];
     banners.forEach((banner) {
-      items.add(Image.network(banner.imagePath,fit: BoxFit.fitWidth,));
+      items.add(GestureDetector(
+        //点击事件(手势)
+        onTap: () {
+          LogUtils.e(TAG, "BannerTitle:" + banner.title);
+        },
+        child: Image.network(
+          banner.imagePath,
+          fit: BoxFit.fitWidth,
+        ),
+      ));
     });
     return items;
   }
