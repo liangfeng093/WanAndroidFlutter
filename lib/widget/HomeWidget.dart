@@ -58,34 +58,88 @@ class HomeStatus extends State {
         body: ListView.builder(
             itemCount: mArticles.length,
             itemBuilder: (BuildContext context, int index) {
-              if (mArticles.length > 0) {
+              if (index == 0) {
                 return Container(
-                  height: 50,
-                  child: Center(child: Text(mArticles[index].title)),
+                  height: 200,
+                  child: BannerWidget(),
                 );
+              }
+              if (mArticles.length > 0) {
+                var article = mArticles[index];
+                var time =
+                    DateTime.fromMillisecondsSinceEpoch(article.publishTime);
+                return Container(
+//                  height: 60,
+                    //此处的padding实际上做出来margin的效果
+                    padding: EdgeInsets.fromLTRB(8, 5, 8, 5),
+                    child: ArticleItemWidget(article.title, article.author,
+                        time.toString().substring(0, 10)));
               } else {
                 return Container(
                   height: 50,
                   child: Center(child: Text("未获取到数据")),
                 );
               }
-            })
-        /*body: Column(
-          children: <Widget>[
-            Container(
-              child: BannerWidget(),
-              height: 200,
+            }));
+  }
+}
+
+class ArticleItemWidget extends StatefulWidget {
+  String title;
+  String author;
+  String time;
+
+  ArticleItemWidget(this.title, this.author, this.time);
+
+  @override
+  State<StatefulWidget> createState() {
+    // TODO: implement createState
+    return ArticleItemState(title, author, time);
+  }
+}
+
+class ArticleItemState extends State {
+  String title;
+  String author;
+  String time;
+
+  ArticleItemState(this.title, this.author, this.time);
+
+  @override
+  Widget build(BuildContext context) {
+    // TODO: implement build
+
+    return Card(
+        child: Column(
+      children: <Widget>[
+        Align(
+          child: Padding(
+            padding: EdgeInsets.fromLTRB(15, 8, 0, 4),
+            child: Text(
+              author,
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
             ),
-            ListView.builder(itemBuilder: (BuildContext context, int index) {
-              return Container(
-                height: 50,
-//                color: Colors.amber[colorCodes[index]],
-//                child: Center(child: Text('Entry ${entries[index]}')),
-                child: Center(child: Text(mArticles[index].title)),
-              );
-            })
-          ],
-        )*/
-        );
+          ),
+          alignment: Alignment.centerLeft,
+        ),
+        Align(
+          child: Padding(
+            padding: EdgeInsets.fromLTRB(15, 0, 0, 4),
+            child: Text(
+              title,
+              style: TextStyle(fontSize: 20),
+            ),
+          ),
+          alignment: Alignment.centerLeft,
+        ),
+        Align(
+          child: Padding(
+            padding: EdgeInsets.fromLTRB(0, 0, 15, 4),
+            child: Text(time),
+          ),
+          alignment: Alignment.bottomRight,
+        ),
+      ],
+    ));
   }
 }
