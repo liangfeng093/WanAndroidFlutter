@@ -8,6 +8,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+
   dio: ^2.1.0  # 请使用pub上2.1分支的最新版本
   flutter_easyrefresh: ^1.2.7
   pull_to_refresh: ^1.4.6
@@ -20,6 +21,7 @@ dev_dependencies:
     sdk: flutter
 
 flutter:
-
+  assets:
+    - assets/
   uses-material-design: true
 
