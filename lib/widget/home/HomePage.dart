@@ -7,7 +7,9 @@ import 'package:wanandroidflutter/utils/LogUtils.dart';
 import 'package:wanandroidflutter/widget/BannerWidget.dart';
 import 'package:wanandroidflutter/widget/home/ArticleItemWidget.dart';
 
+import '../../main.dart';
 import '../ContentPage.dart';
+import 'Events.dart';
 
 /**
  * @Author: mzf
@@ -31,6 +33,9 @@ class HomeStatus extends State {
   int currentPage = 0;
   List<Article> mArticles = List();
   DataRepository repository = DataRepository();
+  bool showToTopBtn = false; //是否显示“返回到顶部”按钮
+  ScrollController _scrollController = ScrollController();
+
   var refreshController = RefreshController(initialRefresh: false);
 
   _getArticleData(bool isRefresh) {
@@ -72,6 +77,21 @@ class HomeStatus extends State {
   @override
   void initState() {
     // TODO: implement initState
+    App.eventBus.on<ScrollToTopEvent>().listen((event) {
+      LogUtils.e(TAG, "eventType:" + event.eventType);
+      _scrollController.jumpTo(0);
+    });
+    _scrollController.addListener(() {
+      //当前位置是否超过屏幕高度
+      if (_scrollController.offset < 200 && showToTopBtn) {
+        showToTopBtn = false;
+      } else if (_scrollController.offset >= 200 && showToTopBtn == false) {
+        showToTopBtn = true;
+      }
+      App.eventBus.fire(ShowHomeFABEvent(showToTopBtn));
+      LogUtils.e(TAG, "showToTopBtn:" + showToTopBtn.toString());
+    });
+
     _getArticleData(true);
     super.initState();
   }
@@ -98,6 +118,7 @@ class HomeStatus extends State {
       },
       controller: refreshController,
       child: ListView.builder(
+          controller: _scrollController,
           itemCount: mArticles.length,
           itemBuilder: (BuildContext context, int index) {
             if (index == 0) {
@@ -134,9 +155,8 @@ class HomeStatus extends State {
     LogUtils.e(TAG, "title:" + article.title);
     LogUtils.e(TAG, "link:" + article.link);
 //    Navigator.pushNamed(context, "/0");
-    Navigator.push(
-        context, MaterialPageRoute(builder: (BuildContext context) {
-          return ContentPage(article.link);
+    Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) {
+      return ContentPage(article.link);
     }));
   }
 }

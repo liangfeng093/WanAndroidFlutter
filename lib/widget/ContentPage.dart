@@ -31,6 +31,7 @@ class ContentPageState extends State<ContentPage> {
     // TODO: implement build
     var webView = WebView();
 
+//    ScrollView
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
@@ -43,9 +44,12 @@ class ContentPageState extends State<ContentPage> {
         ),
       ),
 //      body: Text("this is ContentPage"),
+
       body: WebView(
         onWebViewCreated: (WebViewController controller) {
+          controller;
         },
+//        gestureRecognizers: ,
         //webview支持js
         javascriptMode: JavascriptMode.unrestricted,
         initialUrl: _url,

@@ -1,7 +1,9 @@
+import 'package:event_bus/event_bus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:wanandroidflutter/utils/LogUtils.dart';
 import 'package:wanandroidflutter/widget/ContentPage.dart';
+import 'package:wanandroidflutter/widget/home/Events.dart';
 import 'package:wanandroidflutter/widget/home/HomePage.dart';
 import 'package:wanandroidflutter/widget/page_view.dart';
 
@@ -15,6 +17,8 @@ void main() {
 }
 
 class App extends StatefulWidget {
+  static EventBus eventBus = new EventBus();
+
   final String TAG = "MyApp";
 
   @override
@@ -53,6 +57,28 @@ class Main extends StatefulWidget {
 }
 
 class MainState extends State {
+
+  bool showToTopBtn = false; //是否显示“返回到顶部”按钮
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    App.eventBus.on<ShowHomeFABEvent>().listen((event) {
+      setState(() {
+        if (event.isShow) {
+          setState(() {
+            showToTopBtn = true;
+          });
+        } else {
+          setState(() {
+            showToTopBtn = false;
+          });
+        }
+      });
+    });
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
@@ -82,6 +108,14 @@ class MainState extends State {
             style: TextStyle(),
           ),
         ),
+        floatingActionButton: showToTopBtn
+            ? FloatingActionButton(
+                child: Icon(Icons.arrow_upward),
+                onPressed: () {
+                  App.eventBus.fire(ScrollToTopEvent(ScrollToTopEvent.HOME));
+                },
+              )
+            : null,
         bottomNavigationBar: _buildBottomNavigationBar(),
         body: MyPageView(
           //禁用滑动
