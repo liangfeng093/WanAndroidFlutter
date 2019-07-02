@@ -7,6 +7,8 @@ import 'package:wanandroidflutter/utils/LogUtils.dart';
 import 'package:wanandroidflutter/widget/BannerWidget.dart';
 import 'package:wanandroidflutter/widget/home/ArticleItemWidget.dart';
 
+import '../ContentPage.dart';
+
 /**
  * @Author: mzf
  * @emil: liangfeng093@gmail.com
@@ -14,7 +16,7 @@ import 'package:wanandroidflutter/widget/home/ArticleItemWidget.dart';
  * @Description: APP主界面
  */
 
-class Home extends StatefulWidget {
+class HomePage extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
     // TODO: implement createState
@@ -126,41 +128,15 @@ class HomeStatus extends State {
     );
   }
 
-  BottomNavigationBar _buildBottomNavigationBar() {
-    return BottomNavigationBar(
-      currentIndex: 1, //默认选中位置
-      onTap: (index) {
-        LogUtils.e("BottomNavigationBar===>", "index:" + index.toString());
-      },
-      items: [
-        BottomNavigationBarItem(title: Text("首页"), icon: Icon(Icons.home)),
-        BottomNavigationBarItem(title: Text("首页"), icon: Icon(Icons.home)),
-      ],
-    );
-  }
-
   _onClickItem(int position) {
     LogUtils.e(TAG, "position:" + position.toString());
     var article = mArticles[position];
     LogUtils.e(TAG, "title:" + article.title);
-  }
-
-  _addDrawerChildren() {
-    List<Widget> widgets = List();
-    var drawerHeader = UserAccountsDrawerHeader(
-      accountName: Text("ID"),
-      currentAccountPicture: CircleAvatar(
-        backgroundColor: Colors.white,
-//        backgroundImage: AssetImage("assets/app_icon.png"),
-        backgroundImage: NetworkImage(
-            "https://www.wanandroid.com/resources/image/pc/logo.png",
-            scale: 15),
-//        backgroundImage: AssetImage("assets/user_icon.jpg"),
-      ),
-    );
-//    widgets.add(drawerHeader);
-    widgets.add(Stack());
-
-    return widgets;
+    LogUtils.e(TAG, "link:" + article.link);
+//    Navigator.pushNamed(context, "/0");
+    Navigator.push(
+        context, MaterialPageRoute(builder: (BuildContext context) {
+          return ContentPage(article.link);
+    }));
   }
 }

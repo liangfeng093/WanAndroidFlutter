@@ -559,7 +559,7 @@ class _MyPageViewState extends State<MyPageView> {
         physics: physics,
         viewportBuilder: (BuildContext context, ViewportOffset position) {
           return Viewport(
-            cacheExtent: 250.0,
+            cacheExtent: 10000.0,
             axisDirection: axisDirection,
             offset: position,
             slivers: <Widget>[

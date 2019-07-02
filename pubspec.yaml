@@ -1,6 +1,6 @@
 name: wanandroidflutter
 description: A new Flutter application.
-version: 1.0.0+1
+version: 1.0.5+5
 
 environment:
   sdk: ">=2.1.0 <3.0.0"
@@ -12,6 +12,7 @@ dependencies:
   dio: ^2.1.0  # 请使用pub上2.1分支的最新版本
   flutter_easyrefresh: ^1.2.7
   pull_to_refresh: ^1.4.6
+  webview_flutter: ^0.3.9+1
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^0.1.2
