@@ -32,7 +32,6 @@ class HomeStatus extends State {
   ///当前页数
   int currentPage = 0;
   List<Article> mArticles = List();
-  DataRepository repository = DataRepository();
   bool showToTopBtn = false; //是否显示“返回到顶部”按钮
   ScrollController _scrollController = ScrollController();
 
@@ -49,7 +48,7 @@ class HomeStatus extends State {
     //then方法:注册一个Future回调
     //当getBanner返回Future时出发then回调
     LogUtils.e("currentPage:", currentPage);
-    repository.getArticles(currentPage).then((articles) {
+    App.dataRepository.getArticles(currentPage).then((articles) {
       if (articles.length > 0) {
         if (isRefresh) {
           articles.forEach((item) {

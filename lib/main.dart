@@ -2,10 +2,12 @@ import 'package:event_bus/event_bus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:wanandroidflutter/utils/LogUtils.dart';
-import 'package:wanandroidflutter/widget/ContentPage.dart';
 import 'package:wanandroidflutter/widget/home/Events.dart';
 import 'package:wanandroidflutter/widget/home/HomePage.dart';
+import 'package:wanandroidflutter/widget/knowledge/KnowledgePage.dart';
 import 'package:wanandroidflutter/widget/page_view.dart';
+
+import 'network/DataRepository.dart';
 
 //void main() => runApp(App());
 void main() {
@@ -18,6 +20,7 @@ void main() {
 
 class App extends StatefulWidget {
   static EventBus eventBus = new EventBus();
+  static DataRepository dataRepository = DataRepository();
 
   final String TAG = "MyApp";
 
@@ -57,12 +60,21 @@ class Main extends StatefulWidget {
 }
 
 class MainState extends State {
-
   bool showToTopBtn = false; //是否显示“返回到顶部”按钮
+  var titles = [
+    "首页",
+    "知识体系",
+    "公众号",
+    "项目",
+    "",
+    "",
+  ];
+  var _title = "";
 
   @override
   void initState() {
     // TODO: implement initState
+    _title = titles[0];
     App.eventBus.on<ShowHomeFABEvent>().listen((event) {
       setState(() {
         if (event.isShow) {
@@ -104,7 +116,7 @@ class MainState extends State {
         appBar: AppBar(
           centerTitle: true,
           title: Text(
-            "首页",
+            _title,
             style: TextStyle(),
           ),
         ),
@@ -123,7 +135,7 @@ class MainState extends State {
           controller: _pageControllerageController,
           children: <Widget>[
             HomePage(),
-            Text("this is 2 page"),
+            KnowledgePage(),
             Text("this is 3 page"),
             Text("this is 4 page"),
             Text("this is 5 page"),
@@ -146,36 +158,32 @@ class MainState extends State {
           case 0:
             {
               _pageControllerageController.jumpToPage(index);
-//              Navigator.pushNamed(context, "/0");
               break;
             }
           case 1:
             {
               _pageControllerageController.jumpToPage(index);
-//              Navigator.pushNamed(context, "/1");
               break;
             }
           case 2:
             {
               _pageControllerageController.jumpToPage(index);
-//              Navigator.pushNamed(context, "/2");
               break;
             }
           case 3:
             {
               _pageControllerageController.jumpToPage(index);
-//              Navigator.pushNamed(context, "/3");
               break;
             }
           case 4:
             {
               _pageControllerageController.jumpToPage(index);
-//              Navigator.pushNamed(context, "/4");
               break;
             }
         }
         setState(() {
           _currentIndex = index;
+          _title = titles[index];
           LogUtils.e(
               "BottomNavigationBar===>", "_currentIndex:" + index.toString());
         });

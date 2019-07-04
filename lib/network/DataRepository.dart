@@ -3,6 +3,7 @@ import 'package:wanandroidflutter/bean/Article.dart';
 import 'package:wanandroidflutter/bean/BannerBean.dart';
 import 'package:wanandroidflutter/network/DataContainer.dart';
 import 'package:wanandroidflutter/network/apis.dart';
+import 'package:wanandroidflutter/widget/knowledge/Knowledge.dart';
 
 /**
  * @Author: mzf
@@ -75,5 +76,26 @@ class DataRepository {
       }).toList(); //MappedIterable转化为List*/
     }
     return articles;
+  }
+
+  /**
+   * 知识体系
+   *
+   */
+  Future<List<Knowledge>> getKnowledgeSystem() async {
+    DataContainer<List> dataContainer = await RemoteApi.getInstance().request(
+        RemoteApi.GET, WanAndroidApi.splicePath(path: WanAndroidApi.TREE));
+    List<Knowledge> list;
+    //请求错误,返回error
+    if (dataContainer.errorCode != ResultCode.SUCCESS) {
+      return Future.error(dataContainer.errorMsg);
+    }
+    //判断数据集
+    if (dataContainer.data != null) {
+      list = dataContainer.data.map((item) {
+        return Knowledge.fromJson(item);
+      }).toList();
+    }
+    return list;
   }
 }
