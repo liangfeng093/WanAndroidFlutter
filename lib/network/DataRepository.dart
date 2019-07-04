@@ -98,4 +98,25 @@ class DataRepository {
     }
     return list;
   }
+
+  /**
+   * 获取公众号tab
+   */
+  Future<List<Knowledge>> getPubNumTab() async {
+    DataContainer<List> dataContainer = await RemoteApi.getInstance()
+        .request<List>(RemoteApi.GET,
+            WanAndroidApi.splicePath(path: WanAndroidApi.WXARTICLE_CHAPTERS));
+    List<Knowledge> list;
+    //请求错误,返回error
+    if (dataContainer.errorCode != ResultCode.SUCCESS) {
+      return Future.error(dataContainer.errorMsg);
+    }
+    //判断数据集
+    if (dataContainer.data != null) {
+      list = dataContainer.data.map((item) {
+        return Knowledge.fromJson(item);
+      }).toList();
+    }
+    return list;
+  }
 }

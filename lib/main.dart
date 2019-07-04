@@ -1,11 +1,13 @@
 import 'package:event_bus/event_bus.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
 import 'package:wanandroidflutter/utils/LogUtils.dart';
 import 'package:wanandroidflutter/widget/home/Events.dart';
 import 'package:wanandroidflutter/widget/home/HomePage.dart';
 import 'package:wanandroidflutter/widget/knowledge/KnowledgePage.dart';
 import 'package:wanandroidflutter/widget/page_view.dart';
+import 'package:wanandroidflutter/widget/pub_num/PublicNumberPage.dart';
 
 import 'network/DataRepository.dart';
 
@@ -94,6 +96,7 @@ class MainState extends State {
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
+
     return Scaffold(
         drawer: Drawer(
           child: Column(
@@ -122,11 +125,11 @@ class MainState extends State {
         ),
         floatingActionButton: showToTopBtn
             ? FloatingActionButton(
-                child: Icon(Icons.arrow_upward),
-                onPressed: () {
-                  App.eventBus.fire(ScrollToTopEvent(ScrollToTopEvent.HOME));
-                },
-              )
+          child: Icon(Icons.arrow_upward),
+          onPressed: () {
+            App.eventBus.fire(ScrollToTopEvent(ScrollToTopEvent.HOME));
+          },
+        )
             : null,
         bottomNavigationBar: _buildBottomNavigationBar(),
         body: MyPageView(
@@ -136,7 +139,7 @@ class MainState extends State {
           children: <Widget>[
             HomePage(),
             KnowledgePage(),
-            Text("this is 3 page"),
+            PublicNumberPage(),
             Text("this is 4 page"),
             Text("this is 5 page"),
           ],

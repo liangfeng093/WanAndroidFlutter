@@ -4,7 +4,7 @@ import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:wanandroidflutter/bean/Article.dart';
 import 'package:wanandroidflutter/network/DataRepository.dart';
 import 'package:wanandroidflutter/utils/LogUtils.dart';
-import 'package:wanandroidflutter/widget/BannerWidget.dart';
+import 'package:wanandroidflutter/widget/home/BannerWidget.dart';
 import 'package:wanandroidflutter/widget/home/ArticleItemWidget.dart';
 
 import '../../main.dart';
