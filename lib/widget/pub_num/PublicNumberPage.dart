@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:wanandroidflutter/main.dart';
 import 'package:wanandroidflutter/utils/LogUtils.dart';
+import 'package:wanandroidflutter/widget/base/BaseViewWidget.dart';
 
 /**
  * @Author: mzf
@@ -16,7 +17,7 @@ class PublicNumberPage extends StatefulWidget {
   }
 }
 
-class PublicNumberPageState extends State<PublicNumberPage>
+class PublicNumberPageState extends BaseView
     with SingleTickerProviderStateMixin {
   final String TAG = "PublicNumberPageState";
 
@@ -24,8 +25,7 @@ class PublicNumberPageState extends State<PublicNumberPage>
   TabController _tabController;
 
   @override
-  void initState() {
-    // TODO: implement initState
+  void getData() {
     App.dataRepository.getPubNumTab().then((list) {
       LogUtils.e(TAG, "size:" + list.length.toString());
       _mTabs.clear();
@@ -33,38 +33,33 @@ class PublicNumberPageState extends State<PublicNumberPage>
         _mTabs.add(Tab(
           child: Text(
             item.name,
-            style: TextStyle(color: Colors.black,fontSize: 15),
+            style: TextStyle(color: Colors.black, fontSize: 15),
           ),
         ));
       });
       setState(() {
         _tabController = TabController(vsync: this, length: _mTabs.length);
+        currentState = States.StateSuccess;
       });
+    }).catchError((e) {
+      setState(() {
+        currentState = States.StateException;
+      });
+      return Future.error(e.toString());
     });
-
-    super.initState();
-//    _tabController = TabController(vsync: this, length: _mTabs.length);
   }
 
   @override
-  Widget build(BuildContext context) {
-    // TODO: implement build
-    if (_mTabs.length > 0) {
-      return Column(
-        children: <Widget>[
-          TabBar(
-            isScrollable: true,
-            controller: _tabController,
-            tabs: _mTabs,
-          ),
-        ],
-      );
-    } else {
-      return Column(
-        children: <Widget>[
-          Text("this is PublicNumberPage"),
-        ],
-      );
-    }
+  Widget initSuccessView() {
+    // TODO: implement initSuccessView
+    return Column(
+      children: <Widget>[
+        TabBar(
+          isScrollable: true,
+          controller: _tabController,
+          tabs: _mTabs,
+        ),
+      ],
+    );
   }
 }

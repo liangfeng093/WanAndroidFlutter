@@ -53,21 +53,6 @@ class KnowledgePageState extends BaseView {
   }
 
   @override
-  void showEmptyView() {
-    // TODO: implement showEmptyView
-  }
-
-  @override
-  void showLoadingView() {
-    // TODO: implement showLoadingView
-  }
-
-  @override
-  void showNetworkExceptionView() {
-    // TODO: implement showNetworkExceptionView
-  }
-
-  @override
   Widget initSuccessView() {
     // TODO: implement initSuccessView
     return ListView.builder(

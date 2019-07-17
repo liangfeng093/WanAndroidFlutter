@@ -99,8 +99,11 @@ class HomeStatus extends BaseView {
       LogUtils.e(TAG, "showToTopBtn:" + showToTopBtn.toString());
     });
     super.initState();
+    //可配置自定义的状态视图
+//    emptyView = Text("自定义空视图");
+//    exceptionView = Text("自定义异常视图");
+//    loadingView = Text("自定义空视图");
   }
-
 
   _onClickItem(int position) {
     LogUtils.e(TAG, "position:" + position.toString());
@@ -116,21 +119,6 @@ class HomeStatus extends BaseView {
   void getData() {
     // TODO: implement getData
     _getArticleData(true);
-  }
-
-  @override
-  void showEmptyView() {
-    // TODO: implement showEmptyView
-  }
-
-  @override
-  void showLoadingView() {
-    // TODO: implement showLoadingView
-  }
-
-  @override
-  void showNetworkExceptionView() {
-    // TODO: implement showNetworkExceptionView
   }
 
   @override
@@ -184,4 +172,5 @@ class HomeStatus extends BaseView {
           }),
     );
   }
+
 }

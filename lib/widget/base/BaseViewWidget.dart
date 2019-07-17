@@ -15,24 +15,6 @@ abstract class IBaseView {
   void getData();
 
   /**
-   * 设置空视图
-   */
-//  void setEmptyView(Widget emptyView);
-  void showEmptyView();
-
-  /**
-   * 设置加载中视图
-   */
-//  void setLoadingView(Widget loadingView);
-  void showLoadingView();
-
-  /**
-   * 设置网络异常视图
-   */
-//  void setNetworkExceptionView(Widget exceptionView);
-  void showNetworkExceptionView();
-
-  /**
    * 初始化内容视图
    */
   Widget initSuccessView();
