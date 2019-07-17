@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:wanandroidflutter/utils/LogUtils.dart';
 
 /**
  * @Author: mzf
@@ -30,6 +31,11 @@ abstract class IBaseView {
    */
 //  void setNetworkExceptionView(Widget exceptionView);
   void showNetworkExceptionView();
+
+  /**
+   * 初始化内容视图
+   */
+  Widget initSuccessView();
 }
 
 enum States {
@@ -39,17 +45,22 @@ enum States {
 }
 
 abstract class BaseView<BaseViewWidget> extends State implements IBaseView {
+  final String TAG = "BaseView";
+
   /**
    * 默认加载中
    */
   States currentState = States.StateLoading;
-  Widget emptyView = _initEmptyView();
-  Widget loadingView = _initLoadingView();
-  Widget exceptionView = _initExceptionView();
+  Widget emptyView;
+  Widget loadingView;
+  Widget exceptionView;
 
   @override
   void initState() {
     // TODO: implement initState
+    emptyView = _initEmptyView();
+    loadingView = _initLoadingView();
+    exceptionView = _initExceptionView();
     getData();
     super.initState();
   }
@@ -57,28 +68,47 @@ abstract class BaseView<BaseViewWidget> extends State implements IBaseView {
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
-    return null;
+    if (currentState == States.StateLoading) {
+      return loadingView;
+    }
+    if (currentState == States.StateException) {
+      return exceptionView;
+    }
+    if (currentState == States.StateSuccess) {
+      return initSuccessView();
+    }
   }
 
-  static Widget _initEmptyView() {
+  Widget _initEmptyView() {
     return Container(
       child: Icon(Icons.filter_drama),
     );
   }
 
-  static Widget _initLoadingView() {
+  Widget _initLoadingView() {
     return Center(
-      child: SizedBox(
-        height: 80,
-        width: 80,
-        child: CircularProgressIndicator(),
-      ),
-    );
+        child: SizedBox(
+      height: 80,
+      width: 80,
+      child: CircularProgressIndicator(),
+    ));
   }
 
-  static Widget _initExceptionView() {
-    return Container(
-      child: Icon(Icons.error_outline),
+  Widget _initExceptionView() {
+    return Center(
+      child: GestureDetector(
+        onTap: () {
+          setState(() {
+            currentState = States.StateLoading;
+            getData();
+          });
+        },
+        child: SizedBox(
+          height: 150,
+          width: 150,
+          child: Image.asset("assets/network_exception_.png"),
+        ),
+      ),
     );
   }
 }

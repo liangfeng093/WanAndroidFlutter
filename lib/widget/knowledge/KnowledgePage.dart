@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:wanandroidflutter/utils/LogUtils.dart';
+import 'package:wanandroidflutter/widget/base/BaseViewWidget.dart';
 import 'package:wanandroidflutter/widget/knowledge/Knowledge.dart';
 import 'package:wanandroidflutter/widget/knowledge/KnowledgeItem.dart';
 
@@ -19,7 +20,8 @@ class KnowledgePage extends StatefulWidget {
   }
 }
 
-class KnowledgePageState extends State<KnowledgePage> {
+//class KnowledgePageState extends State<KnowledgePage> {
+class KnowledgePageState extends BaseView {
   final String TAG = "KnowledgePageState";
 
   List<Knowledge> _list = List();
@@ -27,25 +29,53 @@ class KnowledgePageState extends State<KnowledgePage> {
   @override
   void initState() {
     // TODO: implement initState
+
+    super.initState();
+  }
+
+
+  @override
+  void getData() {
+    // TODO: implement getData
     App.dataRepository.getKnowledgeSystem().then((list) {
       LogUtils.e(TAG, "size:" + list.length.toString());
       setState(() {
         _list.clear();
         _list.addAll(list);
+        currentState = States.StateSuccess;
       });
+    }).catchError((e) {
+      setState(() {
+        currentState = States.StateException;
+      });
+      return Future.error(e.toString());
     });
-    super.initState();
   }
 
   @override
-  Widget build(BuildContext context) {
-    // TODO: implement build
+  void showEmptyView() {
+    // TODO: implement showEmptyView
+  }
+
+  @override
+  void showLoadingView() {
+    // TODO: implement showLoadingView
+  }
+
+  @override
+  void showNetworkExceptionView() {
+    // TODO: implement showNetworkExceptionView
+  }
+
+  @override
+  Widget initSuccessView() {
+    // TODO: implement initSuccessView
     return ListView.builder(
         itemCount: _list.length,
         itemBuilder: (BuildContext context, int index) {
           var tilte = _list[index].name;
           var childs = _list[index].children;
-          return KnowledgeItem(childs,tilte);
+          return KnowledgeItem(childs, tilte);
         });
   }
 }
