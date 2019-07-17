@@ -1,16 +1,14 @@
-# wanandroidflutter
+# 玩Android-Flutter客户端
 
-A new Flutter application.
+一个flutter版本的玩Android客户端
 
-## Getting Started
+该项目主要用于学习flutter的开发流程和技巧
 
-This project is a starting point for a Flutter application.
+## 预览
 
-A few resources to get you started if this is your first Flutter project:
+![](https://raw.githubusercontent.com/liangfeng093/WanAndroidFlutter/master/src/home_page.png)
 
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
 
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+
+![](https://raw.githubusercontent.com/liangfeng093/WanAndroidFlutter/master/src/knowledge_page.png)
+
