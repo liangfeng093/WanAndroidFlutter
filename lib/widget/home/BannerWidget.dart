@@ -56,15 +56,20 @@ class BannerState extends State<BannerWidget> {
     List<Widget> items = [];
     banners.forEach((banner) {
       items.add(GestureDetector(
-        //点击事件(手势)
-        onTap: () {
-          LogUtils.e(TAG, "BannerTitle:" + banner.title);
-        },
-        child: Image.network(
+          //点击事件(手势)
+          onTap: () {
+            LogUtils.e(TAG, "BannerTitle:" + banner.title);
+          },
+          child: FadeInImage.assetNetwork(
+            placeholder: "img_placeholder",
+            image: banner.imagePath,
+            fit: BoxFit.fitWidth,
+          )
+          /* child: Image.network(
           banner.imagePath,
           fit: BoxFit.fitWidth,
-        ),
-      ));
+        ),*/
+          ));
     });
     return items;
   }

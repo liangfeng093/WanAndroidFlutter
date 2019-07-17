@@ -4,6 +4,7 @@ import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:wanandroidflutter/bean/Article.dart';
 import 'package:wanandroidflutter/network/DataRepository.dart';
 import 'package:wanandroidflutter/utils/LogUtils.dart';
+import 'package:wanandroidflutter/widget/base/BaseViewWidget.dart';
 import 'package:wanandroidflutter/widget/home/BannerWidget.dart';
 import 'package:wanandroidflutter/widget/home/ArticleItemWidget.dart';
 
@@ -26,7 +27,8 @@ class HomePage extends StatefulWidget {
   }
 }
 
-class HomeStatus extends State {
+//class HomeStatus extends State {
+class HomeStatus extends BaseView {
   final String TAG = "HomeStatus";
 
   ///当前页数
@@ -48,7 +50,12 @@ class HomeStatus extends State {
     //then方法:注册一个Future回调
     //当getBanner返回Future时出发then回调
     LogUtils.e("currentPage:", currentPage);
-    App.dataRepository.getArticles(currentPage).then((articles) {
+    App.dataRepository.getArticles(currentPage).catchError((e) {
+      setState(() {
+        currentState = States.StateException;
+      });
+      return Future.error(e.toString());
+    }).then((articles) {
       if (articles.length > 0) {
         if (isRefresh) {
           articles.forEach((item) {
@@ -68,8 +75,9 @@ class HomeStatus extends State {
           refreshController.loadFailed();
         }
       }
-
-      setState(() {});
+      setState(() {
+        currentState = States.StateSuccess;
+      });
     });
   }
 
@@ -90,62 +98,67 @@ class HomeStatus extends State {
       App.eventBus.fire(ShowHomeFABEvent(showToTopBtn));
       LogUtils.e(TAG, "showToTopBtn:" + showToTopBtn.toString());
     });
-
-    _getArticleData(true);
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
-
-    return SmartRefresher(
-      enablePullDown: true,
-      enablePullUp: true,
-      header: ClassicHeader(),
-      onRefresh: () {
-        LogUtils.e("SmartRefresher", "下拉刷新");
-        _getArticleData(true);
-        //延时三秒
-        /* Future.delayed(Duration(seconds: 2), () {
+    if (currentState == States.StateLoading) {
+      return loadingView;
+    }
+    if (currentState == States.StateException) {
+      return exceptionView;
+    }
+    if (currentState == States.StateSuccess) {
+      return SmartRefresher(
+        enablePullDown: true,
+        enablePullUp: true,
+        header: ClassicHeader(),
+        onRefresh: () {
+          LogUtils.e("SmartRefresher", "下拉刷新");
+          _getArticleData(true);
+          //延时三秒
+          /* Future.delayed(Duration(seconds: 2), () {
               refreshController.refreshFailed();
             });*/
-      },
-      onLoading: () {
-        LogUtils.e("SmartRefresher", "上拉加载");
-        _getArticleData(false);
-      },
-      controller: refreshController,
-      child: ListView.builder(
-          controller: _scrollController,
-          itemCount: mArticles.length,
-          itemBuilder: (BuildContext context, int index) {
-            if (index == 0) {
-              return Container(
-                height: 200,
-                child: BannerWidget(),
-              );
-            }
-            if (mArticles.length > 0) {
-              var article = mArticles[index];
-              var time =
-                  DateTime.fromMillisecondsSinceEpoch(article.publishTime);
-              return Container(
-                  //此处的padding实际上做出来margin的效果
-                  padding: EdgeInsets.fromLTRB(8, 5, 8, 5),
-                  child: GestureDetector(
-                    onTap: () => _onClickItem(index),
-                    child: ArticleItemWidget(article.title, article.author,
-                        time.toString().substring(0, 10)),
-                  ));
-            } else {
-              return Container(
-                height: 50,
-                child: Center(child: Text("未获取到数据")),
-              );
-            }
-          }),
-    );
+        },
+        onLoading: () {
+          LogUtils.e("SmartRefresher", "上拉加载");
+          _getArticleData(false);
+        },
+        controller: refreshController,
+        child: ListView.builder(
+            controller: _scrollController,
+            itemCount: mArticles.length,
+            itemBuilder: (BuildContext context, int index) {
+              if (index == 0) {
+                return Container(
+                  height: 200,
+                  child: BannerWidget(),
+                );
+              }
+              if (mArticles.length > 0) {
+                var article = mArticles[index];
+                var time =
+                    DateTime.fromMillisecondsSinceEpoch(article.publishTime);
+                return Container(
+                    //此处的padding实际上做出来margin的效果
+                    padding: EdgeInsets.fromLTRB(8, 5, 8, 5),
+                    child: GestureDetector(
+                      onTap: () => _onClickItem(index),
+                      child: ArticleItemWidget(article.title, article.author,
+                          time.toString().substring(0, 10)),
+                    ));
+              } else {
+                return Container(
+                  height: 50,
+                  child: Center(child: Text("未获取到数据")),
+                );
+              }
+            }),
+      );
+    }
   }
 
   _onClickItem(int position) {
@@ -153,9 +166,29 @@ class HomeStatus extends State {
     var article = mArticles[position];
     LogUtils.e(TAG, "title:" + article.title);
     LogUtils.e(TAG, "link:" + article.link);
-//    Navigator.pushNamed(context, "/0");
     Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) {
       return ContentPage(article.link);
     }));
+  }
+
+  @override
+  void getData() {
+    // TODO: implement getData
+    _getArticleData(true);
+  }
+
+  @override
+  void showEmptyView() {
+    // TODO: implement showEmptyView
+  }
+
+  @override
+  void showLoadingView() {
+    // TODO: implement showLoadingView
+  }
+
+  @override
+  void showNetworkExceptionView() {
+    // TODO: implement showNetworkExceptionView
   }
 }

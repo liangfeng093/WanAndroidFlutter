@@ -101,6 +101,10 @@ class MainState extends State {
         drawer: Drawer(
           child: Column(
             children: <Widget>[
+              /*Image.asset(
+                "assets/img_placeholder.png",
+                fit: BoxFit.fill,
+              )*/
               Container(
                 height: 200,
                 color: Colors.grey,
@@ -125,11 +129,11 @@ class MainState extends State {
         ),
         floatingActionButton: showToTopBtn
             ? FloatingActionButton(
-          child: Icon(Icons.arrow_upward),
-          onPressed: () {
-            App.eventBus.fire(ScrollToTopEvent(ScrollToTopEvent.HOME));
-          },
-        )
+                child: Icon(Icons.arrow_upward),
+                onPressed: () {
+                  App.eventBus.fire(ScrollToTopEvent(ScrollToTopEvent.HOME));
+                },
+              )
             : null,
         bottomNavigationBar: _buildBottomNavigationBar(),
         body: MyPageView(
@@ -175,6 +179,7 @@ class MainState extends State {
             }
           case 3:
             {
+              Tooltip(message: "点击项目tab");
               _pageControllerageController.jumpToPage(index);
               break;
             }
