@@ -8,7 +8,7 @@
 
 [第三方库](#第三方库)
 
-[Thanks For](#Thanks For)
+[感谢](#感谢)
 
 一个flutter版本的玩Android客户端
 
@@ -42,7 +42,7 @@
 
 
 
-## Thanks For
+## 感谢
 
 - 鸿洋提供的的玩Android[API](https://www.wanandroid.com/blog/show/2)
 - 阿里的[**flutter-go**](https://github.com/alibaba/flutter-go)
