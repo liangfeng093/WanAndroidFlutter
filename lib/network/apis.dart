@@ -11,6 +11,12 @@ class WanAndroidApi {
   /// 项目列表数据 http://www.wanandroid.com/project/list/1/json?cid=294
   static const String PROJECT_LIST = "project/list";
 
+  /// 常用网站 https://www.wanandroid.com/friend/json
+  static const String FRIEND_URL_LIST = "friend";
+
+  /// 搜索热词 https://www.wanandroid.com//hotkey/json
+  static const String HOT_KEY = "hotkey";
+
   /// 体系数据 http://www.wanandroid.com/tree/json
   static const String TREE = "tree";
 
@@ -29,10 +35,14 @@ class WanAndroidApi {
   static const String USER_LOGIN = "user/login"; //登录
   static const String USER_LOGOUT = "user/logout"; //退出
 
-  static String splicePath({String path: '', int page, String resType: 'json'}) {
+  static String splicePath(
+      {String path: '', int page, String resType: 'json', String parameter}) {
     StringBuffer sb = new StringBuffer(path);
     if (page != null) {
       sb.write('/$page');
+    }
+    if (parameter != null) {
+      sb.write('/$parameter');
     }
     if (resType != null && resType.isNotEmpty) {
       sb.write('/$resType');

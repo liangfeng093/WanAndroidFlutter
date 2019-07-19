@@ -1,9 +1,12 @@
 import 'package:wanandroidflutter/RemoteApi.dart';
 import 'package:wanandroidflutter/bean/Article.dart';
 import 'package:wanandroidflutter/bean/BannerBean.dart';
+import 'package:wanandroidflutter/bean/FriendUrl.dart';
+import 'package:wanandroidflutter/bean/HotWord.dart';
 import 'package:wanandroidflutter/network/DataContainer.dart';
 import 'package:wanandroidflutter/network/apis.dart';
 import 'package:wanandroidflutter/widget/knowledge/Knowledge.dart';
+import 'package:wanandroidflutter/widget/pub_num/WxArticle.dart';
 
 /**
  * @Author: mzf
@@ -100,6 +103,13 @@ class DataRepository {
   }
 
   /**
+   * 知识体系下的文章
+   */
+  getKnowledgeArticles() {
+
+  }
+
+  /**
    * 获取公众号tab
    */
   Future<List<Knowledge>> getPubNumTab() async {
@@ -119,4 +129,74 @@ class DataRepository {
     }
     return list;
   }
+
+  /**
+   * 查看某个公众号历史数据
+   */
+  Future<List<WxArticle>> getPubNumHistory(String pubNumId, String page) async {
+    String parameter = pubNumId + "/" + page;
+    DataContainer<Map<String, dynamic>> dataContainer =
+        await RemoteApi.getInstance().request(
+            RemoteApi.GET,
+            WanAndroidApi.splicePath(
+                path: WanAndroidApi.WXARTICLE_LIST, parameter: parameter));
+    List<WxArticle> list;
+    //请求错误,返回error
+    if (dataContainer.errorCode != ResultCode.SUCCESS) {
+      return Future.error(dataContainer.errorMsg);
+    }
+    //判断数据集
+    if (dataContainer.data != null) {
+      WxArticleList wxArticleList = WxArticleList.fromJson(dataContainer.data);
+      list = wxArticleList.datas.map((item) {
+        return WxArticle.fromJson(item.toJson());
+      }).toList();
+    }
+    return list;
+  }
+
+  /**
+   * 常用网站
+   */
+  Future<List<FriendUrl>> getFriendUrl() async {
+    DataContainer<List> dataContainer = await RemoteApi.getInstance()
+        .request<List>(RemoteApi.GET,
+            WanAndroidApi.splicePath(path: WanAndroidApi.FRIEND_URL_LIST));
+    List<FriendUrl> list;
+    //请求错误,返回error
+    if (dataContainer.errorCode != ResultCode.SUCCESS) {
+      return Future.error(dataContainer.errorMsg);
+    }
+    //判断数据集
+    if (dataContainer.data != null) {
+      list = dataContainer.data.map((item) {
+        return FriendUrl.fromJson(item);
+      }).toList();
+    }
+    return list;
+  }
+
+  /**
+   * 搜索热词
+   */
+  Future<List<HotWord>> getHotWord() async {
+    DataContainer<List> dataContainer = await RemoteApi.getInstance()
+        .request<List>(RemoteApi.GET,
+            WanAndroidApi.splicePath(path: WanAndroidApi.HOT_KEY));
+    List<HotWord> list;
+    //请求错误,返回error
+    if (dataContainer.errorCode != ResultCode.SUCCESS) {
+      return Future.error(dataContainer.errorMsg);
+    }
+    //判断数据集
+    if (dataContainer.data != null) {
+      list = dataContainer.data.map((item) {
+        return HotWord.fromJson(item);
+      }).toList();
+    }
+    return list;
+  }
+/**
+ *
+ */
 }

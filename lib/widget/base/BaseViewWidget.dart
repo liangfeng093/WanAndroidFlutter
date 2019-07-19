@@ -26,7 +26,7 @@ enum States {
   StateException,
 }
 
-abstract class BaseView<BaseViewWidget> extends State implements IBaseView {
+abstract class BaseView extends State implements IBaseView {
   final String TAG = "BaseView";
 
   /**

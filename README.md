@@ -14,15 +14,18 @@
 
 该项目主要用于学习flutter的开发流程和技巧
 
-
-
 ## 环境
 
 >Dart Version : 2.3.0
 >
 >Flutter Version : 1.5.4+hotfix.2
 
+## 学习笔记
 
+1. dio封装
+2. 魔改PageView
+3. 封装BaseView
+4. 实现流式布局
 
 ## 预览
 
@@ -46,7 +49,7 @@
 
 - 鸿洋提供的的玩Android[API](https://www.wanandroid.com/blog/show/2)
 - 阿里的[**flutter-go**](https://github.com/alibaba/flutter-go)
-- 恋猫de小郭的 [GSYGithubAppFlutter](https://juejin.im/user/582aca2ba22b9d006b59ae68/posts)
+- 恋猫de小郭的 [GSYGithubAppFlutter](https://github.com/CarGuo/GSYGithubAppFlutter)
 
 
 

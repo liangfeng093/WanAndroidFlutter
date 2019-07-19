@@ -37,6 +37,8 @@ class AppState extends State<App> {
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
+//    App.dataRepository.getFriendUrl();
+    App.dataRepository.getHotWord();
     return MaterialApp(
       title: 'Flutter Demo',
 //      home: Main(),
