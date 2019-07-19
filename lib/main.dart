@@ -8,6 +8,7 @@ import 'package:wanandroidflutter/widget/home/HomePage.dart';
 import 'package:wanandroidflutter/widget/knowledge/KnowledgePage.dart';
 import 'package:wanandroidflutter/widget/page_view.dart';
 import 'package:wanandroidflutter/widget/pub_num/PublicNumberPage.dart';
+import 'package:wanandroidflutter/widget/search/SearchPage.dart';
 
 import 'network/DataRepository.dart';
 
@@ -128,6 +129,20 @@ class MainState extends State {
             _title,
             style: TextStyle(),
           ),
+          actions: <Widget>[
+            IconButton(
+              icon: Icon(
+                Icons.search,
+                color: Colors.white,
+              ),
+              onPressed: () {
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (BuildContext context) {
+                  return SearchPage();
+                }));
+              },
+            )
+          ],
         ),
         floatingActionButton: showToTopBtn
             ? FloatingActionButton(

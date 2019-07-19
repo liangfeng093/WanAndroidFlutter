@@ -2,7 +2,7 @@ import 'package:wanandroidflutter/RemoteApi.dart';
 import 'package:wanandroidflutter/bean/Article.dart';
 import 'package:wanandroidflutter/bean/BannerBean.dart';
 import 'package:wanandroidflutter/bean/FriendUrl.dart';
-import 'package:wanandroidflutter/bean/HotWord.dart';
+import 'package:wanandroidflutter/widget/search/HotWord.dart';
 import 'package:wanandroidflutter/network/DataContainer.dart';
 import 'package:wanandroidflutter/network/apis.dart';
 import 'package:wanandroidflutter/widget/knowledge/Knowledge.dart';
