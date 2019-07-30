@@ -3,6 +3,7 @@ import 'package:wanandroidflutter/main.dart';
 import 'package:wanandroidflutter/utils/LogUtils.dart';
 import 'package:wanandroidflutter/widget/ContentPage.dart';
 import 'package:wanandroidflutter/widget/base/BaseViewWidget.dart';
+import 'package:wanandroidflutter/widget/dialog/LoadingDialog.dart';
 import 'package:wanandroidflutter/widget/home/ArticleItemWidget.dart';
 import 'package:wanandroidflutter/widget/knowledge/Knowledge.dart';
 import 'package:wanandroidflutter/widget/pub_num/WxArticle.dart';
@@ -21,6 +22,12 @@ class PublicNumberPage extends StatefulWidget {
   }
 }
 
+enum PNPStates {
+  Loading_Left,
+  Success_Left,
+  Exception_Left,
+}
+
 class PublicNumberPageState extends BaseView
     with SingleTickerProviderStateMixin {
   final String TAG = "PublicNumberPageState";
@@ -29,22 +36,49 @@ class PublicNumberPageState extends BaseView
   List<WxArticle> _mArticles = [];
   int _selectTabPosition = 0;
 
+  //本页面使用自定义状态
+  PNPStates _state = PNPStates.Loading_Left;
+
+  PageController _pageController;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    _pageController = PageController(
+      initialPage: 0,
+    );
+    super.initState();
+    //可配置自定义的状态视图
+//    emptyView = _initEmptyView();
+//    loadingView = _initLoadingView();
+//    exceptionView = _initExceptionView();
+  }
+
+  Widget _initEmptyView() {}
+
+  Widget _initLoadingView() {}
+
+  Widget _initExceptionView() {}
+
+  @override
+  Widget build(BuildContext context) {
+    // TODO: implement build
+    return super.build(context);
+  }
+
   @override
   void getData() {
     getTabs();
-    getList("408", "0");
+    getList("408", "0", 0);
   }
 
-  void getList(String pubNumId, String page) {
-    currentState = States.StateLoading;
+  void getList(String pubNumId, String page, int index) {
     App.dataRepository.getPubNumHistory(pubNumId, page).then((list) {
       setState(() {
         _mArticles.clear();
         _mArticles.addAll(list);
-        currentState = States.StateSuccess;
-        LogUtils.e(
-            TAG, "getPubNumHistory=======>>>>>>size:" + list.length.toString());
-        LogUtils.e(TAG, "getPubNumHistory=======>>>>>>" + list.toString());
+        _pageController.jumpToPage(index);
+        Navigator.pop(context);
       });
     });
   }
@@ -84,24 +118,31 @@ class PublicNumberPageState extends BaseView
           flex: 1,
         ),
         Flexible(
-          flex: 2,
-          child: ListView.builder(
-            itemBuilder: (BuildContext context, int index) {
-              var article = _mArticles[index];
-              var time =
-                  DateTime.fromMillisecondsSinceEpoch(article.publishTime);
-              return GestureDetector(
-                onTap: () => _onClickItemLv2(index),
-                child: Container(
-                  color: Colors.white,
-                  child: ArticleItemWidget(article.title, article.author,
-                      time.toString().substring(0, 10)),
-                ),
-              );
-            },
-            itemCount: _mArticles.length,
-          ),
-        ),
+            flex: 2,
+            child: PageView.builder(
+                controller: _pageController,
+                //禁用滑动
+                physics: NeverScrollableScrollPhysics(),
+                itemCount: _mTabDatas.length,
+                itemBuilder: (BuildContext context, int index) {
+//                  return Text("this is " + index.toString() + "page");
+                  return ListView.builder(
+                    itemBuilder: (BuildContext context, int index) {
+                      var article = _mArticles[index];
+                      var time = DateTime.fromMillisecondsSinceEpoch(
+                          article.publishTime);
+                      return GestureDetector(
+                        onTap: () => _onClickItemLv2(index),
+                        child: Container(
+                          color: Colors.white,
+                          child: ArticleItemWidget(article.title,
+                              article.author, time.toString().substring(0, 10)),
+                        ),
+                      );
+                    },
+                    itemCount: _mArticles.length,
+                  );
+                })),
       ],
     );
   }
@@ -125,11 +166,16 @@ class PublicNumberPageState extends BaseView
   }
 
   _onClickItemLv1(int index) {
-    LogUtils.e(TAG, "index:" + index.toString());
+    //展示loading对话框
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return LoadingDialog();
+        });
     setState(() {
       _selectTabPosition = index;
       String pubNumId = _mTabDatas[index].id.toString();
-      getList(pubNumId, "0");
+      getList(pubNumId, "0", index);
     });
   }
 

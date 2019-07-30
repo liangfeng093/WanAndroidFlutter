@@ -59,6 +59,7 @@ abstract class BaseView extends State implements IBaseView {
     if (currentState == States.StateSuccess) {
       return initSuccessView();
     }
+    return initSuccessView();
   }
 
   Widget _initEmptyView() {
