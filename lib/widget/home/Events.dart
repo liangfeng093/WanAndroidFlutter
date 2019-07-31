@@ -1,3 +1,5 @@
+import 'package:flutter/material.dart';
+
 /**
  * @Author: mzf
  * @emil: liangfeng093@gmail.com
@@ -19,4 +21,11 @@ class ShowHomeFABEvent {
   var isShow = false;
 
   ShowHomeFABEvent(this.isShow);
+}
+
+class ThemEvent{
+  Color primaryColor ;
+
+  ThemEvent(this.primaryColor);
+
 }

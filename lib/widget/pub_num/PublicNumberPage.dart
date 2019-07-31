@@ -74,12 +74,12 @@ class PublicNumberPageState extends BaseView
 
   void getList(String pubNumId, String page, int index) {
     App.dataRepository.getPubNumHistory(pubNumId, page).then((list) {
-      setState(() {
+      /*setState(() {
         _mArticles.clear();
         _mArticles.addAll(list);
         _pageController.jumpToPage(index);
         Navigator.pop(context);
-      });
+      });*/
     });
   }
 
