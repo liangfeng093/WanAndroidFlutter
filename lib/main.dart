@@ -9,7 +9,7 @@ import 'package:wanandroidflutter/widget/knowledge/KnowledgePage.dart';
 import 'package:wanandroidflutter/widget/page_view.dart';
 import 'package:wanandroidflutter/widget/pub_num/PublicNumberPage.dart';
 import 'package:wanandroidflutter/widget/search/SearchPage.dart';
-
+import 'package:shared_preferences/shared_preferences.dart';
 import 'network/DataRepository.dart';
 
 //void main() => runApp(App());
@@ -18,12 +18,21 @@ void main() {
   ///
   SystemChrome.setPreferredOrientations(
       [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
-  runApp(App());
+  App.getPrimaryColor().then((color) {
+    App.primaryColor = Color(color);
+    runApp(App());
+  });
+}
+
+class AppConfig {
+  static final String PRIMARY_COLOR = "PrimaryColor";
 }
 
 class App extends StatefulWidget {
   static EventBus eventBus = new EventBus();
   static DataRepository dataRepository = DataRepository();
+
+  static Color primaryColor = Colors.tealAccent;
 
   final String TAG = "MyApp";
 
@@ -32,15 +41,40 @@ class App extends StatefulWidget {
     // TODO: implement createState
     return AppState();
   }
+
+  static Future<int> getPrimaryColor() async {
+    var sp = await SharedPreferences.getInstance();
+    int color = sp.getInt(AppConfig.PRIMARY_COLOR) ?? Colors.grey;
+    return color;
+  }
 }
 
 class AppState extends State<App> {
+  final String TAG = "AppState";
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    App.eventBus.on<ThemEvent>().listen((event) {
+      setState(() {
+        LogUtils.e(TAG, "切换主题色:" + event.primaryColor.toString());
+        _savePrimaryColor(event.primaryColor.value);
+        App.primaryColor = event.primaryColor;
+      });
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
 //    App.dataRepository.getFriendUrl();
-    App.dataRepository.getHotWord();
+//    App.dataRepository.getHotWord();
+    var list = App.dataRepository.getProjectTypes();
+    LogUtils.e(TAG, "");
+
     return MaterialApp(
+      theme: ThemeData(primaryColor: App.primaryColor),
       title: 'Flutter Demo',
 //      home: Main(),
       initialRoute: "/", //初始路由
@@ -54,6 +88,11 @@ class AppState extends State<App> {
       },
     );
   }
+
+  _savePrimaryColor(int color) async {
+    var sp = await SharedPreferences.getInstance();
+    await sp.setInt(AppConfig.PRIMARY_COLOR, color);
+  }
 }
 
 class Main extends StatefulWidget {
@@ -65,7 +104,6 @@ class Main extends StatefulWidget {
 }
 
 class MainState extends State {
-
   final String TAG = "MainState";
 
   bool showToTopBtn = false; //是否显示“返回到顶部”按钮
@@ -78,8 +116,6 @@ class MainState extends State {
     "",
   ];
   var _title = "";
-
-  Color primaryColor = Colors.tealAccent ;
 
   @override
   void initState() {
@@ -99,47 +135,39 @@ class MainState extends State {
       });
     });
     super.initState();
-    App.eventBus.on<ThemEvent>().listen((event) {
-      setState(() {
-        LogUtils.e(TAG, "切换主题色:"+event.primaryColor.toString());
-        primaryColor = event.primaryColor;
-      });
-    });
   }
 
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
 
-    return Theme(
-      data: ThemeData(primaryColor: primaryColor),
-      child: Scaffold(
-          drawer: Drawer(
-            child: Column(
-              children: <Widget>[
-                Expanded(
-                  child: Container(
-                    color: Colors.tealAccent,
-                    child: Center(
-                      /*child: Image.asset(
+    return Scaffold(
+        drawer: Drawer(
+          child: Column(
+            children: <Widget>[
+              Expanded(
+                child: Container(
+                  color: Colors.tealAccent,
+                  child: Center(
+                    /*child: Image.asset(
                         "assets/app_icon.png",
                         height: 100,
                         width: 100,
                       ),*/
-                      child: Icon(
-                        Icons.android,
-                        size: 180.0,
-                        color: Colors.white,
-                      ),
+                    child: Icon(
+                      Icons.android,
+                      size: 180.0,
+                      color: Colors.white,
                     ),
                   ),
-                  flex: 2,
                 ),
-                Expanded(
-                  child: DrawerMenu(),
-                  flex: 5,
-                ),
-                /*Container(
+                flex: 2,
+              ),
+              Expanded(
+                child: DrawerMenu(),
+                flex: 5,
+              ),
+              /*Container(
                   height: 200,
                   color: Colors.grey,
                   child: Center(
@@ -150,52 +178,51 @@ class MainState extends State {
                     ),
                   ),
                 ),*/
-              ],
-            ),
+            ],
           ),
-          appBar: AppBar(
-            centerTitle: true,
-            title: Text(
-              _title,
-              style: TextStyle(),
-            ),
-            actions: <Widget>[
-              IconButton(
-                icon: Icon(
-                  Icons.search,
-                  color: Colors.white,
-                ),
+        ),
+        appBar: AppBar(
+          centerTitle: true,
+          title: Text(
+            _title,
+            style: TextStyle(),
+          ),
+          actions: <Widget>[
+            IconButton(
+              icon: Icon(
+                Icons.search,
+                color: Colors.white,
+              ),
+              onPressed: () {
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (BuildContext context) {
+                  return SearchPage();
+                }));
+              },
+            )
+          ],
+        ),
+        floatingActionButton: showToTopBtn
+            ? FloatingActionButton(
+                child: Icon(Icons.arrow_upward),
                 onPressed: () {
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (BuildContext context) {
-                    return SearchPage();
-                  }));
+                  App.eventBus.fire(ScrollToTopEvent(ScrollToTopEvent.HOME));
                 },
               )
-            ],
-          ),
-          floatingActionButton: showToTopBtn
-              ? FloatingActionButton(
-                  child: Icon(Icons.arrow_upward),
-                  onPressed: () {
-                    App.eventBus.fire(ScrollToTopEvent(ScrollToTopEvent.HOME));
-                  },
-                )
-              : null,
-          bottomNavigationBar: _buildBottomNavigationBar(),
-          body: MyPageView(
-            //禁用滑动
-            physics: NeverScrollableScrollPhysics(),
-            controller: _pageControllerageController,
-            children: <Widget>[
-              HomePage(),
-              KnowledgePage(),
-              PublicNumberPage(),
-              Text("this is 4 page"),
-              Text("this is 5 page"),
-            ],
-          )),
-    );
+            : null,
+        bottomNavigationBar: _buildBottomNavigationBar(),
+        body: MyPageView(
+          //禁用滑动
+          physics: NeverScrollableScrollPhysics(),
+          controller: _pageControllerageController,
+          children: <Widget>[
+            HomePage(),
+            KnowledgePage(),
+            PublicNumberPage(),
+            Text("this is 4 page"),
+            Text("this is 5 page"),
+          ],
+        ));
   }
 
   MyPageController _pageControllerageController = MyPageController();
