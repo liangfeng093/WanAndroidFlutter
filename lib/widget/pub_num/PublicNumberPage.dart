@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:wanandroidflutter/main.dart';
 import 'package:wanandroidflutter/utils/LogUtils.dart';
 import 'package:wanandroidflutter/widget/ContentPage.dart';
@@ -41,6 +42,13 @@ class PublicNumberPageState extends BaseView
 
   PageController _pageController;
 
+  String currentPubNumId = "408";
+
+  int currentPage = 1;
+
+  var refreshController = RefreshController(initialRefresh: false);
+  var scrollController = ScrollController();
+
   @override
   void initState() {
     // TODO: implement initState
@@ -69,18 +77,22 @@ class PublicNumberPageState extends BaseView
   @override
   void getData() {
     getTabs();
-    getList("408", "0", 0, false);
+    getList(currentPubNumId, "0", _selectTabPosition, false, true);
   }
 
-  void getList(String pubNumId, String page, int index, bool isJump) {
+  void getList(
+      String pubNumId, String page, int index, bool isJump, bool isClear) {
     App.dataRepository.getPubNumHistory(pubNumId, page).then((list) {
       setState(() {
-        _mArticles.clear();
+        if (isClear) {
+          _mArticles.clear();
+        }
         _mArticles.addAll(list);
         if (isJump) {
           _pageController.jumpToPage(index);
           Navigator.pop(context);
         }
+        refreshController.loadComplete();
       });
     });
   }
@@ -127,22 +139,40 @@ class PublicNumberPageState extends BaseView
                 physics: NeverScrollableScrollPhysics(),
                 itemCount: _mTabDatas.length,
                 itemBuilder: (BuildContext context, int index) {
-//                  return Text("this is " + index.toString() + "page");
-                  return ListView.builder(
-                    itemBuilder: (BuildContext context, int index) {
-                      var article = _mArticles[index];
-                      var time = DateTime.fromMillisecondsSinceEpoch(
-                          article.publishTime);
-                      return GestureDetector(
-                        onTap: () => _onClickItemLv2(index),
-                        child: Container(
-                          color: Colors.white,
-                          child: ArticleItemWidget(article.title,
-                              article.author, time.toString().substring(0, 10)),
-                        ),
-                      );
+                  return SmartRefresher(
+                    enablePullDown: false,
+                    enablePullUp: true,
+                    header: ClassicHeader(),
+                    onRefresh: () {
+                      LogUtils.e("SmartRefresher", "下拉刷新");
+//                      getList(currentPubNumId, page, index, isJump);
                     },
-                    itemCount: _mArticles.length,
+                    onLoading: () {
+                      LogUtils.e("SmartRefresher", "上拉加载");
+                      ++currentPage;
+                      getList(currentPubNumId, currentPage.toString(),
+                          _selectTabPosition, false, false);
+                    },
+                    controller: refreshController,
+                    child: ListView.builder(
+                      itemBuilder: (BuildContext context, int index) {
+                        var article = _mArticles[index];
+                        var time = DateTime.fromMillisecondsSinceEpoch(
+                            article.publishTime);
+                        return GestureDetector(
+                          onTap: () => _onClickItemLv2(index),
+                          child: Container(
+                            color: Colors.white,
+                            child: ArticleItemWidget(
+                                article.title,
+                                article.author,
+                                time.toString().substring(0, 10)),
+                          ),
+                        );
+                      },
+                      itemCount: _mArticles.length,
+                      controller: scrollController,
+                    ),
                   );
                 })),
       ],
@@ -152,6 +182,7 @@ class PublicNumberPageState extends BaseView
   Widget _tabLv1(int index) {
     return GestureDetector(
       onTap: () => _onClickItemLv1(index),
+      onDoubleTap: () => _onDoubleItemLv1(index),
       child: Container(
         height: 50,
         color: (_selectTabPosition == index)
@@ -169,16 +200,30 @@ class PublicNumberPageState extends BaseView
 
   _onClickItemLv1(int index) {
     //展示loading对话框
-    showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return LoadingDialog();
-        });
-    setState(() {
+    if (index != _selectTabPosition) {
+      showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return LoadingDialog();
+          });
+      setState(() {
+        currentPage = 1; //重置页数
+        _selectTabPosition = index;
+        currentPubNumId = _mTabDatas[index].id.toString();
+        getList(currentPubNumId, "0", index, true, true);
+      });
+    }
+  }
+
+  _onDoubleItemLv1(int index) {
+    //展示loading对话框
+    scrollController.jumpTo(0);
+    /*setState(() {
+      currentPage = 1; //重置页数
       _selectTabPosition = index;
-      String pubNumId = _mTabDatas[index].id.toString();
-      getList(pubNumId, "0", index, true);
-    });
+      currentPubNumId = _mTabDatas[index].id.toString();
+      getList(currentPubNumId, "0", index, true, true);
+    });*/
   }
 
   _onClickItemLv2(int index) {
