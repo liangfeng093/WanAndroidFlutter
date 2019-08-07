@@ -7,6 +7,9 @@ import 'package:wanandroidflutter/widget/home/Events.dart';
 import 'package:wanandroidflutter/widget/home/HomePage.dart';
 import 'package:wanandroidflutter/widget/knowledge/KnowledgePage.dart';
 import 'package:wanandroidflutter/widget/page_view.dart';
+import 'package:wanandroidflutter/widget/projects/ProjectAllPage.dart';
+import 'package:wanandroidflutter/widget/projects/ProjectPage.dart';
+import 'package:wanandroidflutter/widget/projects/ProjectTypePage.dart';
 import 'package:wanandroidflutter/widget/pub_num/PublicNumberPage.dart';
 import 'package:wanandroidflutter/widget/search/SearchPage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -70,8 +73,6 @@ class AppState extends State<App> {
     // TODO: implement build
 //    App.dataRepository.getFriendUrl();
 //    App.dataRepository.getHotWord();
-    var list = App.dataRepository.getProjectTypes();
-    LogUtils.e(TAG, "");
 
     return MaterialApp(
       theme: ThemeData(primaryColor: App.primaryColor),
@@ -219,7 +220,9 @@ class MainState extends State {
             HomePage(),
             KnowledgePage(),
             PublicNumberPage(),
-            Text("this is 4 page"),
+
+//            ProjectPage(),
+            ProjectTypePage(),
             Text("this is 5 page"),
           ],
         ));

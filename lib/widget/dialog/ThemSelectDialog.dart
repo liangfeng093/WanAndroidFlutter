@@ -10,14 +10,14 @@ import 'package:wanandroidflutter/widget/home/Events.dart';
  */
 class ThemSelectDialog extends Dialog {
   var colors = [
-    Colors.yellow,
+    Colors.amber,
     Colors.blue,
     Colors.deepOrange,
     Colors.deepPurpleAccent,
     Colors.green,
     Colors.pinkAccent,
     Colors.purpleAccent,
-    Colors.tealAccent,
+    Colors.red,
   ];
 
   @override

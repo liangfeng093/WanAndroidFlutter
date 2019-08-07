@@ -36,7 +36,11 @@ class WanAndroidApi {
   static const String USER_LOGOUT = "user/logout"; //退出
 
   static String splicePath(
-      {String path: '', int page, String resType: 'json', String parameter}) {
+      {String path: '',
+      int page,
+      String resType: 'json',
+      String parameter,
+      String id}) {
     StringBuffer sb = new StringBuffer(path);
     if (page != null) {
       sb.write('/$page');
@@ -46,6 +50,9 @@ class WanAndroidApi {
     }
     if (resType != null && resType.isNotEmpty) {
       sb.write('/$resType');
+    }
+    if (id != null && id.isNotEmpty) {
+      sb.write('?cid=$id');
     }
     return sb.toString();
   }

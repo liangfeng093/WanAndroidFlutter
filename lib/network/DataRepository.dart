@@ -2,6 +2,8 @@ import 'package:wanandroidflutter/RemoteApi.dart';
 import 'package:wanandroidflutter/bean/Article.dart';
 import 'package:wanandroidflutter/bean/BannerBean.dart';
 import 'package:wanandroidflutter/bean/FriendUrl.dart';
+import 'package:wanandroidflutter/widget/projects/Project.dart';
+import 'package:wanandroidflutter/widget/projects/ProjectType.dart';
 import 'package:wanandroidflutter/widget/search/HotWord.dart';
 import 'package:wanandroidflutter/network/DataContainer.dart';
 import 'package:wanandroidflutter/network/apis.dart';
@@ -105,9 +107,7 @@ class DataRepository {
   /**
    * 知识体系下的文章
    */
-  getKnowledgeArticles() {
-
-  }
+  getKnowledgeArticles() {}
 
   /**
    * 获取公众号tab
@@ -196,7 +196,60 @@ class DataRepository {
     }
     return list;
   }
-/**
- *
- */
+
+  /**
+   * 项目分类
+   */
+  Future<List<ProjectType>> getProjectTypes() async {
+    DataContainer<List> dataContainer = await RemoteApi.getInstance()
+        .request<List>(RemoteApi.GET,
+            WanAndroidApi.splicePath(path: WanAndroidApi.PROJECT_TREE));
+    List<ProjectType> list;
+    //请求错误,返回error
+    if (dataContainer.errorCode != ResultCode.SUCCESS) {
+      return Future.error(dataContainer.errorMsg);
+    }
+    //判断数据集
+    if (dataContainer.data != null) {
+      list = dataContainer.data.map((item) {
+        return ProjectType.fromJson(item);
+      }).toList();
+    }
+    return list;
+  }
+
+  /**
+   * 项目列表数据
+   */
+
+  Future<List<Project>> getProjects(int page,String id ) async {
+    DataContainer<Map<String, dynamic>> dataContainer =
+    await RemoteApi.getInstance().request<Map<String, dynamic>>(
+        RemoteApi.GET,
+        WanAndroidApi.splicePath(
+            path: WanAndroidApi.PROJECT_LIST, page: page,id: id));
+
+    List<Project> projects;
+
+    //请求错误,返回error
+    if (dataContainer.errorCode != ResultCode.SUCCESS) {
+      return Future.error(dataContainer.errorMsg);
+    }
+
+    //判断数据集
+    if (dataContainer.data != null) {
+      //dataContainer.data的类型:List<Map<String,String>>
+      //map方法遍历list====>dataContainer.data,list中的每个元素作为参数执行传入的函数
+      //map方法执行(遍历)完后返回MappedIterable
+      ProjectsData projectsData = ProjectsData.fromJson(dataContainer.data);
+      projects = projectsData.datas.map((item) {
+        return Project.fromJson(item);
+      }).toList();
+      /*articles = dataContainer.data.map((item) {
+        ///解析map，初始化成员变量。
+        return Article.fromJson(item);
+      }).toList(); //MappedIterable转化为List*/
+    }
+    return projects;
+  }
 }

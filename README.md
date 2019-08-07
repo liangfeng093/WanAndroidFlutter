@@ -6,6 +6,10 @@
 >
 >[环境](#环境)
 >
+>[项目计划](#项目计划)
+>
+>[项目进度](#项目进度)
+>
 >[预览](#预览)
 >
 >[第三方库](#第三方库)
@@ -21,6 +25,23 @@
 >Dart Version : 2.3.0
 >
 >Flutter Version : 1.5.4+hotfix.2
+
+## 项目计划
+
+>
+>
+>
+
+## 项目进度
+
+>1. 实现首页功能（banner+文章列表）
+>2. 实现知识体系模块（流式布局）
+>3. 实现公众号模块
+>4. 实现搜索模块（未完成）
+>
+>
+>
+>
 
 ## 学习笔记
 
@@ -47,6 +68,7 @@
 | 网络请求    | [dio](https://pub.flutter-io.cn/packages/dio)                |
 | WebView插件 | [webview_flutter](https://pub.flutter-io.cn/packages/webview_flutter) |
 | 下拉刷新    | [pull_to_refresh](https://pub.flutter-io.cn/packages/pull_to_refresh) |
+|             | [shared_preferences](https://pub.flutter-io.cn/packages/shared_preferences#-readme-tab-) |
 
 
 
