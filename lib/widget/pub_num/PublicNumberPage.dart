@@ -69,17 +69,19 @@ class PublicNumberPageState extends BaseView
   @override
   void getData() {
     getTabs();
-    getList("408", "0", 0);
+    getList("408", "0", 0, false);
   }
 
-  void getList(String pubNumId, String page, int index) {
+  void getList(String pubNumId, String page, int index, bool isJump) {
     App.dataRepository.getPubNumHistory(pubNumId, page).then((list) {
-      /*setState(() {
+      setState(() {
         _mArticles.clear();
         _mArticles.addAll(list);
-        _pageController.jumpToPage(index);
-        Navigator.pop(context);
-      });*/
+        if (isJump) {
+          _pageController.jumpToPage(index);
+          Navigator.pop(context);
+        }
+      });
     });
   }
 
@@ -175,7 +177,7 @@ class PublicNumberPageState extends BaseView
     setState(() {
       _selectTabPosition = index;
       String pubNumId = _mTabDatas[index].id.toString();
-      getList(pubNumId, "0", index);
+      getList(pubNumId, "0", index, true);
     });
   }
 

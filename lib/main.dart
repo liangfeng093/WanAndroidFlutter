@@ -1,18 +1,17 @@
 import 'package:event_bus/event_bus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:wanandroidflutter/utils/LogUtils.dart';
 import 'package:wanandroidflutter/widget/DrawerMenu.dart';
 import 'package:wanandroidflutter/widget/home/Events.dart';
 import 'package:wanandroidflutter/widget/home/HomePage.dart';
 import 'package:wanandroidflutter/widget/knowledge/KnowledgePage.dart';
 import 'package:wanandroidflutter/widget/page_view.dart';
-import 'package:wanandroidflutter/widget/projects/ProjectAllPage.dart';
-import 'package:wanandroidflutter/widget/projects/ProjectPage.dart';
 import 'package:wanandroidflutter/widget/projects/ProjectTypePage.dart';
 import 'package:wanandroidflutter/widget/pub_num/PublicNumberPage.dart';
 import 'package:wanandroidflutter/widget/search/SearchPage.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+
 import 'network/DataRepository.dart';
 
 //void main() => runApp(App());
