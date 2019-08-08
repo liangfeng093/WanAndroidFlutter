@@ -78,7 +78,7 @@ class ProjectTypeState extends BaseView {
 //                App.eventBus.fire(JumpEvent(types[index].id.toString()));
                 Navigator.push(context,
                     MaterialPageRoute(builder: (BuildContext context) {
-                  return ProjectAllPage(types);
+                  return ProjectAllPage(types,index);
                 }));
               },
               child: Container(

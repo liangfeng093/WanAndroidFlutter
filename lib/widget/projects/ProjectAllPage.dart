@@ -16,13 +16,14 @@ import 'ProjectType.dart';
  */
 class ProjectAllPage extends StatefulWidget {
   List<ProjectType> tabs;
+  int indicatorIndex;
 
-  ProjectAllPage(this.tabs);
+  ProjectAllPage(this.tabs, this.indicatorIndex);
 
   @override
   State<StatefulWidget> createState() {
     // TODO: implement createState
-    return ProjectAllState(tabs);
+    return ProjectAllState(tabs, indicatorIndex);
   }
 }
 
@@ -31,17 +32,22 @@ class ProjectAllState extends BaseView with TickerProviderStateMixin {
   List<Project> projects = List();
 
   List<ProjectType> _mTypes;
+  int indicatorIndex;
 
-  ProjectAllState(this._mTypes);
+  ProjectAllState(this._mTypes, this.indicatorIndex);
 
   TabController _tabController;
 
+  var refreshController = RefreshController(initialRefresh: false);
+  var scrollController = ScrollController();
 
+  int currentPage = 1;
+  String currentId = "294";
 
   @override
   void initState() {
     // TODO: implement initState
-    App.eventBus.on<JumpEvent>().listen((event) {
+    /*App.eventBus.on<JumpEvent>().listen((event) {
       currentState = States.StateLoading;
       App.dataRepository.getProjects(1, event.id).then((list) {
         setState(() {
@@ -51,28 +57,43 @@ class ProjectAllState extends BaseView with TickerProviderStateMixin {
           currentState = States.StateSuccess;
         });
       });
-    });
-
-    _tabController =
-        TabController(initialIndex: 0, length: _mTypes.length, vsync: this);
-//        TabController(initialIndex: 0, length: 3, vsync: this);
-
-//    currentState = States.StateSuccess;
-
+    });*/
+    currentId = _mTypes[indicatorIndex].id.toString();
+    _tabController = TabController(
+        initialIndex: indicatorIndex, length: _mTypes.length, vsync: this);
     super.initState();
   }
 
   @override
   void getData() {
-    getProjects(1, "294");
+    getProjects(1, currentId, false);
   }
 
-  void getProjects(int page, String id) {
+  void getProjects(int page, String id, bool isClear) {
     App.dataRepository.getProjects(page, id).then((list) {
       setState(() {
         LogUtils.e(TAG, "====>>>>>getProjects:" + list.toString());
-        projects.clear();
-        projects.addAll(list);
+        if (list.length > 0) {
+          if (isClear) {
+            projects.clear();
+          }
+          projects.addAll(list);
+          if (refreshController.isRefresh) {
+            refreshController.refreshCompleted();
+          }
+          if (refreshController.isLoading) {
+            refreshController.loadComplete();
+          }
+        } else {
+          //没有加载到更多
+          if (refreshController.isRefresh) {
+            refreshController.resetNoData();
+          }
+          if (refreshController.isLoading) {
+            refreshController.loadNoData();
+          }
+        }
+
         currentState = States.StateSuccess;
       });
     });
@@ -115,24 +136,34 @@ class ProjectAllState extends BaseView with TickerProviderStateMixin {
           indicatorColor: Colors.white,
           labelColor: App.primaryColor,
           onTap: (index) {
-            getProjects(1, _mTypes[index].id.toString());
+            currentPage = 1;
+            currentId = _mTypes[index].id.toString();
+            getProjects(currentPage, currentId, true);
           },
         ),
       ),
-      body: ListView.builder(
-          itemCount: projects.length,
-          itemBuilder: (BuildContext context, int index) {
-            return _item(index);
-          }),
+      body: SmartRefresher(
+        enablePullDown: true,
+        enablePullUp: true,
+        header: ClassicHeader(),
+        onRefresh: () {
+          LogUtils.e("SmartRefresher", "下拉刷新");
+//                      getList(currentPubNumId, page, index, isJump);
+          getProjects(1, currentId, true);
+        },
+        onLoading: () {
+          LogUtils.e("SmartRefresher", "上拉加载");
+          ++currentPage;
+          getProjects(currentPage, currentId, false);
+        },
+        controller: refreshController,
+        child: ListView.builder(
+            itemCount: projects.length,
+            itemBuilder: (BuildContext context, int index) {
+              return _item(index);
+            }),
+      ),
     );
-    /* return Container(
-      color: Colors.white70,
-      child: ListView.builder(
-          itemCount: projects.length,
-          itemBuilder: (BuildContext context, int index) {
-            return _item(index);
-          }),
-    );*/
   }
 
   Widget _item(int index) {
