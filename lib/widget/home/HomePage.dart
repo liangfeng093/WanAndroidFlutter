@@ -88,6 +88,9 @@ class HomeStatus extends BaseView {
       LogUtils.e(TAG, "eventType:" + event.eventType);
       _scrollController.jumpTo(0);
     });
+    App.eventBus.on<BackToTopEvent>().listen((event) {
+      _scrollController.jumpTo(0);
+    });
     _scrollController.addListener(() {
       //当前位置是否超过屏幕高度
       if (_scrollController.offset < 200 && showToTopBtn) {

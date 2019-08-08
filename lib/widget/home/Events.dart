@@ -29,3 +29,5 @@ class ThemEvent{
   ThemEvent(this.primaryColor);
 
 }
+
+class BackToTopEvent{}

@@ -7,7 +7,8 @@ import 'package:wanandroidflutter/widget/DrawerMenu.dart';
 import 'package:wanandroidflutter/widget/home/Events.dart';
 import 'package:wanandroidflutter/widget/home/HomePage.dart';
 import 'package:wanandroidflutter/widget/knowledge/KnowledgePage.dart';
-import 'package:wanandroidflutter/widget/page_view.dart';
+import 'package:wanandroidflutter/widget/magic_change/bottom_navigation_bar.dart';
+import 'package:wanandroidflutter/widget/magic_change/page_view.dart';
 import 'package:wanandroidflutter/widget/projects/ProjectTypePage.dart';
 import 'package:wanandroidflutter/widget/pub_num/PublicNumberPage.dart';
 import 'package:wanandroidflutter/widget/search/SearchPage.dart';
@@ -147,7 +148,7 @@ class MainState extends State {
             children: <Widget>[
               Expanded(
                 child: Container(
-                  color: Colors.tealAccent,
+                  color: App.primaryColor,
                   child: Center(
                     /*child: Image.asset(
                         "assets/app_icon.png",
@@ -231,10 +232,21 @@ class MainState extends State {
 
   int _currentIndex = 0;
 
-  BottomNavigationBar _buildBottomNavigationBar() {
-    BottomNavigationBar _bottomNavigationBar = BottomNavigationBar(
-      currentIndex: _currentIndex, //默认选中位置
-      type: BottomNavigationBarType.fixed,
+  MyBottomNavigationBar _buildBottomNavigationBar() {
+    MyBottomNavigationBar _bottomNavigationBar = MyBottomNavigationBar(
+      currentIndex: _currentIndex,
+      //默认选中位置
+      type: MyBottomNavigationBarType.fixed,
+      onDoubleTap: (index) {
+        switch (index) {
+          case 0:
+            {
+              //回到首页列表顶部
+              App.eventBus.fire(BackToTopEvent());
+              break;
+            }
+        }
+      },
 //      fixedColor: Colors.blue,
       onTap: (index) {
         LogUtils.e("BottomNavigationBar===>", "index:" + index.toString());
