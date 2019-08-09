@@ -47,4 +47,11 @@ class Knowledge {
         "userControlSetTop": userControlSetTop,
         "visible": visible,
       };
+
+  @override
+  String toString() {
+    return 'Knowledge{children: $children, courseId: $courseId, id: $id, name: $name, order: $order, parentChapterId: $parentChapterId, userControlSetTop: $userControlSetTop, visible: $visible}';
+  }
+
+
 }

@@ -104,10 +104,6 @@ class DataRepository {
     return list;
   }
 
-  /**
-   * 知识体系下的文章
-   */
-  getKnowledgeArticles() {}
 
   /**
    * 获取公众号tab
@@ -245,11 +241,39 @@ class DataRepository {
       projects = projectsData.datas.map((item) {
         return Project.fromJson(item);
       }).toList();
-      /*articles = dataContainer.data.map((item) {
-        ///解析map，初始化成员变量。
-        return Article.fromJson(item);
-      }).toList(); //MappedIterable转化为List*/
     }
     return projects;
   }
+
+  /**
+   *  知识体系下的文章
+   */
+
+  Future<List<Article>> getKnowledgeArticles(int page, String id) async {
+    DataContainer<Map<String, dynamic>> dataContainer =
+    await RemoteApi.getInstance().request<Map<String, dynamic>>(
+        RemoteApi.GET,
+        WanAndroidApi.splicePath(
+            path: WanAndroidApi.ARTICLE_LIST, page: page, id: id));
+
+    List<Article> articles;
+
+    //请求错误,返回error
+    if (dataContainer.errorCode != ResultCode.SUCCESS) {
+      return Future.error(dataContainer.errorMsg);
+    }
+
+    //判断数据集
+    if (dataContainer.data != null) {
+      //dataContainer.data的类型:List<Map<String,String>>
+      //map方法遍历list====>dataContainer.data,list中的每个元素作为参数执行传入的函数
+      //map方法执行(遍历)完后返回MappedIterable
+      ArticlesData articlesData = ArticlesData.fromJson(dataContainer.data);
+      articles = articlesData.datas.map((item) {
+        return Article.fromJson(item);
+      }).toList();
+    }
+    return articles;
+  }
+
 }

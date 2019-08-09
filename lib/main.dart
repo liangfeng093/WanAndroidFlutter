@@ -47,7 +47,7 @@ class App extends StatefulWidget {
 
   static Future<int> getPrimaryColor() async {
     var sp = await SharedPreferences.getInstance();
-    int color = sp.getInt(AppConfig.PRIMARY_COLOR) ?? Colors.grey;
+    int color = sp.getInt(AppConfig.PRIMARY_COLOR) ?? Colors.grey.value;
     return color;
   }
 }
@@ -73,6 +73,9 @@ class AppState extends State<App> {
     // TODO: implement build
 //    App.dataRepository.getFriendUrl();
 //    App.dataRepository.getHotWord();
+    /*App.dataRepository.getKnowledgeArticles(0,"60").then((list) {
+      LogUtils.e(TAG, "*********>>>>>>>>>>知识体系下的文章:" + list.toString());
+    });*/
 
     return MaterialApp(
       theme: ThemeData(primaryColor: App.primaryColor),

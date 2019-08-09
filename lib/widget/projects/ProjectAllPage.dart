@@ -46,18 +46,6 @@ class ProjectAllState extends BaseView with TickerProviderStateMixin {
 
   @override
   void initState() {
-    // TODO: implement initState
-    /*App.eventBus.on<JumpEvent>().listen((event) {
-      currentState = States.StateLoading;
-      App.dataRepository.getProjects(1, event.id).then((list) {
-        setState(() {
-          LogUtils.e(TAG, "====>>>>>getProjects:" + list.toString());
-          projects.clear();
-          projects.addAll(list);
-          currentState = States.StateSuccess;
-        });
-      });
-    });*/
     currentId = _mTypes[indicatorIndex].id.toString();
     _tabController = TabController(
         initialIndex: indicatorIndex, length: _mTypes.length, vsync: this);

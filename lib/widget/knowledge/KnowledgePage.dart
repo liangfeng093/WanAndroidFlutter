@@ -1,7 +1,10 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:vector_math/vector_math_64.dart';
 import 'package:wanandroidflutter/utils/LogUtils.dart';
 import 'package:wanandroidflutter/widget/base/BaseViewWidget.dart';
 import 'package:wanandroidflutter/widget/knowledge/Knowledge.dart';
+import 'package:wanandroidflutter/widget/knowledge/KnowledgeAllPage.dart';
 import 'package:wanandroidflutter/widget/knowledge/KnowledgeItem.dart';
 
 import '../../main.dart';
@@ -33,7 +36,6 @@ class KnowledgePageState extends BaseView {
     super.initState();
   }
 
-
   @override
   void getData() {
     // TODO: implement getData
@@ -58,9 +60,19 @@ class KnowledgePageState extends BaseView {
     return ListView.builder(
         itemCount: _list.length,
         itemBuilder: (BuildContext context, int index) {
-          var tilte = _list[index].name;
+          var title = _list[index].name;
           var childs = _list[index].children;
-          return KnowledgeItem(childs, tilte);
+          return GestureDetector(
+            onTap: () => _onClickItem(index),
+            child: KnowledgeItem(childs, title),
+          );
         });
+  }
+
+  _onClickItem(int index) {
+    LogUtils.e(TAG, "_onClickItem:" + _list[index].toString());
+    Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) {
+      return KnowledgeAllPage(_list[index].children);
+    }));
   }
 }

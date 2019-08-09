@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:wanandroidflutter/utils/LogUtils.dart';
+import 'package:wanandroidflutter/widget/ContentPage.dart';
 import 'package:wanandroidflutter/widget/knowledge/Knowledge.dart';
 
 /**
@@ -39,45 +40,44 @@ class KnowledgeItemState extends State<KnowledgeItem> {
     childs.forEach((item) {
       childWidgets.add(Padding(
         padding: EdgeInsets.all(5),
-        child: GestureDetector(
-          onTap: () {
-            LogUtils.e(TAG, "点击:" + item.name);
-          },
-          child: Chip(
-            //随机颜色
-            backgroundColor: Color.fromARGB(
-              100,
-              Random.secure().nextInt(255),
-              Random.secure().nextInt(255),
-              Random.secure().nextInt(255),
-            ),
-            materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-            label: Text(item.name),
+        child: Chip(
+          //随机颜色
+          backgroundColor: Color.fromARGB(
+            100,
+            Random.secure().nextInt(255),
+            Random.secure().nextInt(255),
+            Random.secure().nextInt(255),
           ),
+          materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+          label: Text(item.name),
         ),
       ));
     });
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: <Widget>[
-        Padding(
-          padding: const EdgeInsets.fromLTRB(8, 8, 0, 8),
-          child: Text(
-            title,
-            style: TextStyle(fontSize: 20),
+
+    return Container(
+      color: Colors.white,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Padding(
+            padding: const EdgeInsets.fromLTRB(8, 8, 0, 8),
+            child: Text(
+              title,
+              style: TextStyle(fontSize: 20),
+            ),
           ),
-        ),
-        Wrap(
-          children: childWidgets,
-        ),
-        Padding(
-          padding: EdgeInsets.fromLTRB(0, 8, 0, 0),
-          child: Divider(
-            height: 1,
-            color: Colors.grey,
+          Wrap(
+            children: childWidgets,
           ),
-        )
-      ],
+          Padding(
+            padding: EdgeInsets.fromLTRB(0, 8, 0, 0),
+            child: Divider(
+              height: 1,
+              color: Colors.grey,
+            ),
+          )
+        ],
+      ),
     );
   }
 }
